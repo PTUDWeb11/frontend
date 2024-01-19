@@ -29,6 +29,11 @@ function logout() {
 function profile() {
 	router.push('/profile');
 }
+
+function admin() {
+	router.push('/admin');
+}
+
 </script>
 
 <template>
@@ -54,6 +59,10 @@ function profile() {
 			<DropdownMenuGroup>
 				<DropdownMenuItem @click="profile">
 					Profile
+					<DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+				</DropdownMenuItem>
+				<DropdownMenuItem @click="admin">
+					Admin
 					<DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
 				</DropdownMenuItem>
 				<DropdownMenuItem>
