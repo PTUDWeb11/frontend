@@ -4,6 +4,7 @@ import vue3GoogleLogin from "vue3-google-login";
 import "vuestic-ui/styles/essential.css";
 import "vuestic-ui/styles/grid.css";
 import "vuestic-ui/styles/typography.css";
+import 'vuestic-ui/dist/vuestic-ui.css'
 import App from "./App.vue";
 import "./assets/index.css";
 import router from "./router";
@@ -21,3 +22,4 @@ app.use(vue3GoogleLogin, {
 });
 app.use(createVuestic())
 app.mount("#app");
+

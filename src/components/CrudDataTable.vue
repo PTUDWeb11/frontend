@@ -1,173 +1,113 @@
 <template>
-  <VaDataTable
-    class="table-crud"
-    :items="items"
-    :columns="columns"
-    striped
-  >
-    <template #headerAppend>
-      <tr class="table-crud__slot">
-        <th
-          v-for="key in Object.keys(createdItem)"
-          :key="key"
-          class="p-1"
-        >
-          <VaInput
-            v-model="createdItem[key]"
-            :placeholder="key"
-          />
-        </th>
-        <th class="p-1">
-          <VaButton
-            :disabled="!isNewData"
-            block
-            @click="addNewItem"
-          >
-            Add
-          </VaButton>
-        </th>
-      </tr>
-    </template>
-
-    <template #cell(actions)="{ rowIndex }">
-      <VaButton
-        preset="plain"
-        icon="edit"
-        @click="openModalToEditItemById(rowIndex)"
-      />
-      <VaButton
-        preset="plain"
-        icon="delete"
-        class="ml-3"
-        @click="deleteItemById(rowIndex)"
-      />
-    </template>
-  </VaDataTable>
-
-  <VaModal
-    class="modal-crud"
-    :model-value="!!editedItem"
-    title="Edit item"
-    size="small"
-    @ok="editItem"
-    @cancel="resetEditedItem"
-  >
-    <VaInput
-      v-for="key in Object.keys(editedItem)"
-      :key="key"
-      v-model="editedItem[key]"
-      class="my-6"
-      :label="key"
-    />
-  </VaModal>
+  <div>
+    <VaButton @click="showModal = !showModal"> Edit </VaButton>
+    <VaModal v-model="showModal" message="Classic modal overlay which represents a dialog box or other interactive component, such as a dismissible alert, sub-window, etc." ok-text="Apply" blur />
+    <ag-grid-vue 
+      style="height: 520px" 
+      :class="themeClass" 
+      :columnDefs="colDefs" 
+      @grid-ready="onGridReady" 
+      :rowData="rowData" 
+      :defaultColDef="defaultColDef" 
+      :pagination="true" 
+      :rowSelection="'multiple'"
+      @cell-value-changed="onCellValueChanged" 
+      @selection-changed="onSelectionChanged" >
+    </ag-grid-vue>
+  </div>
 </template>
 
 <script>
-import { defineComponent } from "vue";
-const defaultItem = {
-  name: "",
-  username: "",
-  email: "",
-};
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-quartz.css';
+import { AgGridVue } from 'ag-grid-vue3';
+import { onMounted, ref } from 'vue';
 
-export default defineComponent({
-  data() {
-    const items = [
-      {
-        name: "Leanne Graham",
-        username: "Bret",
-        email: "Sincere@april.biz",
-      },
-      {
-        name: "Ervin Howell",
-        username: "Antonette",
-        email: "Shanna@melissa.tv",
-      },
-      {
-        name: "Clementine Bauch",
-        username: "Samantha",
-        email: "Nathan@yesenia.net",
-      },
-      {
-        name: "Patricia Lebsack",
-        username: "Karianne",
-        email: "Julianne.OConner@kory.org",
-      },
-    ];
+export default ({
+  name: "CrudDataTable",
+  components: {
+    AgGridVue,
+  },
+  methods: {
+    onCellValueChanged(event) {
+      console.log(`New Cell Value: ${event.value}`);
+    },
+  },
+  setup(props) {
+    const rowData = ref([]);
+    const gridApi = ref();
 
-    const columns = [
-      { key: "name", sortable: true },
-      { key: "username", sortable: true },
-      { key: "email", sortable: true },
-      { key: "actions", width: 80 },
-    ];
+    // Fetch data when the component is mounted
+    onMounted(async () => {
+      try {
+        const response = await fetch('https://poshop-ea528.ondigitalocean.app/products/main');
+        const data = await response.json();
+        rowData.value = data.data;
+        console.log(rowData.value);
+      }
+      catch (e) {
+        console.log('error');
+      }
+    });
+
+    const dateFormatter = (params) => {
+      return new Date(params.value).toLocaleDateString('en-us', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      });
+    };
+
+    const colDefs = ref([
+      { field: 'name', width: 250, checkboxSelection: true },
+      {
+        headerName: 'Image',
+        field: 'images',
+        width: 150,
+        cellRenderer: (params) => {
+          return `<div style="display: flex; overflow: auto;">${params.value.map(src => `<img src="${src}" style="width: 40px; height: auto"/>`).join('')}</div>`;
+        }
+      },
+      { field: 'price', width: 130 },
+      { field: 'description', width: 225 },
+      { field: 'quantity', width: 130 },
+      { field: 'createdAt', valueFormatter: dateFormatter },
+      { field: 'updatedAt', valueFormatter: dateFormatter },
+    ]);
+
+    const defaultColDef = ref({
+      filter: true,
+      editable: true,
+    });
+
+    const onGridReady = (params) => {
+      gridApi.value = params.api;
+      console.log('GridReady');
+    };
+
+    const onSelectionChanged = () => {
+      if (gridApi.value) {
+        const selectedRows = gridApi.value.getSelectedRows();
+        console.log('click onSelectionChanged');
+        console.log(selectedRows[0].name);
+      }
+    };
 
     return {
-      items,
-      columns,
-      editedItemId: null,
-      editedItem: null,
-      createdItem: { ...defaultItem },
+      rowData,
+      gridApi,
+      colDefs,
+      defaultColDef,
+      onGridReady,
+      onSelectionChanged,
+      themeClass: "ag-theme-quartz",
     };
   },
-
-  computed: {
-    isNewData() {
-      return Object.keys(this.createdItem).every(
-        (key) => !!this.createdItem[key]
-      );
-    },
-  },
-
-  methods: {
-    resetEditedItem() {
-      this.editedItem = null;
-      this.editedItemId = null;
-    },
-    resetCreatedItem() {
-      this.createdItem = { ...defaultItem };
-    },
-    deleteItemById(id) {
-      this.items = [...this.items.slice(0, id), ...this.items.slice(id + 1)];
-    },
-    addNewItem() {
-      this.items = [...this.items, { ...this.createdItem }];
-      this.resetCreatedItem();
-    },
-    editItem() {
-      this.items = [
-        ...this.items.slice(0, this.editedItemId),
-        { ...this.editedItem },
-        ...this.items.slice(this.editedItemId + 1),
-      ];
-      this.resetEditedItem();
-    },
-    openModalToEditItemById(id) {
-      this.editedItemId = id;
-      this.editedItem = { ...this.items[id] };
-    },
+  data() {
+    return {
+      showModal: false,
+    };
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.table-crud {
-  --va-form-element-default-width: 0;
-
-  .va-input {
-    display: block;
-  }
-
-  &__slot {
-    th {
-      vertical-align: middle;
-    }
-  }
-}
-
-.modal-crud {
-  .va-input {
-    display: block;
-  }
-}
-</style>

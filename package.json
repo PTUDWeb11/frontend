@@ -7,7 +7,9 @@
     "dev": "vue-cli-service serve"
   },
   "dependencies": {
+    "@vuestic/ag-grid-theme": "^1.1.4",
     "@vueuse/core": "^10.7.1",
+    "ag-grid-vue3": "^31.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "core-js": "^3.8.3",
