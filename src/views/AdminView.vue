@@ -84,7 +84,7 @@
         <h3 class="va-h3">
           Products list
         </h3>
-        <CrudDataTable />
+        <CrudProductsTable/>
       </main>
 
       <main
@@ -109,7 +109,7 @@
 <script>
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue';
-import CrudDataTable from '@/components/CrudDataTable.vue';
+import CrudProductsTable from '@/components/CrudProductsTable.vue';
 import { VaDataTable, VaLayout, VaNavbar, VaSidebar, VaSidebarItem, VaInput } from "vuestic-ui"
 
 export default {
@@ -117,7 +117,7 @@ export default {
 	components: {
     HelloWorld,
     VaDataTable,
-    CrudDataTable,
+    CrudProductsTable,
     VaLayout
 	},
   computed: {
