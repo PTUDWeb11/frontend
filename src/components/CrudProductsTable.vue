@@ -42,7 +42,7 @@
                 Edit
               </VaButton> 
 
-              <VaButton icon="delete">
+              <VaButton icon="delete" @click="onDeleteItem">
                 Delete
               </VaButton> 
             </div>
@@ -149,6 +149,30 @@ export default ({
       }
     };
 
+    const onDeleteItem = async () => {
+        if (state.selectedRow) {
+          console.log('delete');
+          // Delete the data...
+          // API call to delete the data on the server.
+
+          // Find the deleted row in rowData and remove it
+          const index = rowData.value.findIndex(row => row.id === state.selectedRow.id);
+          if (index !== -1) {
+            console.log(index);
+            console.log(rowData.value[index]);
+            rowData.value.splice(index, 1);
+            console.log(rowData.value[index]);
+          }
+
+          // Refresh the grid 
+          if (gridApi.value) {
+            gridApi.value.refreshCells();
+          }
+
+          state.showModal = false;
+        }
+      };
+
     const dateFormatter = (params) => {
       return new Date(params.value).toLocaleDateString('en-us', {
         weekday: 'long',
@@ -204,6 +228,7 @@ export default ({
       onGridReady,
       onSelectionChanged,
       onEditItem, 
+      onDeleteItem,
       onApply,
       themeClass: "ag-theme-quartz",
     };
