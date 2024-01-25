@@ -24,37 +24,37 @@ export default class Category {
 		// TODO: save category to database
 	}
 
-	static fetchAll() {
-		return getRandomCategoryArray(24); // Mock data
+	static async fetchAll() {
+		return fetch("https://poshop-ea528.ondigitalocean.app/categories/main")
+			.then((response) => response.json())
+			.then((data) => data.data)
+			.then((data) => {
+				console.log(data);
+				const categories = [];
+				data.forEach((item) => {
+					categories.push(parse(item, data));
+				});
+				console.log(categories);
+				return categories;
+			});
+
+		function parse(obj) {
+			const subCategories = [];
+
+			// Skip if the category is a subcategory
+			if (obj.parentId === null) {
+				obj.children.forEach((child) => {
+					subCategories.push(parse(child));
+				});
+			}
+
+			return new Category(
+				obj.id,
+				obj.parentId,
+				obj.name,
+				obj.image,
+				subCategories
+			);
+		}
 	}
-}
-
-function getRandomCategory() {
-	const id = Math.floor(Math.random() * 100).toString();
-	const parent_id = null;
-	const name = "Category " + id;
-	const image = `https://picsum.photos/200/300?random=${id}`;
-	const subCategories = [];
-
-	const numSubCategories = Math.floor(Math.random() * 4 + 2);
-
-	for (let i = 0; i < numSubCategories; i++) {
-		const subCategoryId = id + "-" + i;
-		const subCategoryName = "Subcategory " + subCategoryId;
-		const subCategoryImage = `https://picsum.photos/200/300?random=${subCategoryId}`;
-
-		subCategories.push(
-			new Category(subCategoryId, id, subCategoryName, subCategoryImage, [])
-		);
-	}
-
-	return new Category(id, parent_id, name, image, subCategories);
-}
-
-function getRandomCategoryArray(count) {
-	const categories = [];
-	for (let i = 0; i < count; i++) {
-		categories.push(getRandomCategory());
-	}
-	return categories;
 }
