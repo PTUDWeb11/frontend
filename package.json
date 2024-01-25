@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@vueuse/core": "^10.7.1",
+    "axios": "^1.6.6",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "core-js": "^3.8.3",
@@ -19,6 +20,7 @@
     "tailwindcss-animate": "^1.0.7",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
+    "vue3-carousel": "^0.3.1",
     "vue3-google-login": "^2.0.25",
     "vuestic-ui": "^1.5.0"
   },

@@ -1,38 +1,44 @@
+<script setup>
+import { ChevronDown } from "lucide-vue-next";
+</script>
+
 <template>
-	<div
-		class="category-card w-1/12 h-44 pt-2 border-r border-b border-solid border-gray-200 hover:shadow-lg transition duration-300 ease-in-out"
-	>
+	<div class="category-card">
 		<VaDropdown
-			trigger="hover"
+			:trigger="dropdownTrigger"
 			hover-out-timeout="0"
 			:offset="offset"
-			class="p-px"
 		>
 			<template #anchor>
-				<div class="flex flex-col h-full">
-					<div class="h-4/6 mx-auto">
+				<div class="card-container flex flex-row items-center h-16 p-2">
+					<div class="w-1/2">
 						<img
 							class="max-h-full object-contain"
 							:src="category.image"
 							:alt="category.name"
 						/>
 					</div>
-					<h3>{{ category.name }}</h3>
+					<h3 class="ml-2 mr-1">{{ category.name }}</h3>
+					<template v-if="hasSubCategories">
+						<ChevronDown class="min-w-4 min-h-4 w-4 h-4" />
+					</template>
 				</div>
 			</template>
 
-			<VaDropdownContent>
-				<div class="flex flex-col">
-					<a href="">
-						<div
-							v-for="subCategory in category.subCategories"
-							:key="subCategory.id"
-							class="px-2 py-2 border-b border-solid border-gray-200 hover:bg-gray-100 transition duration-300 ease-in-out"
-						>
-							{{ subCategory.name }}
-						</div>
-					</a>
-				</div>
+			<VaDropdownContent class="w-56">
+				<template v-if="hasSubCategories">
+					<div class="flex flex-col">
+						<a href="">
+							<div
+								v-for="subCategory in category.subCategories"
+								:key="subCategory.id"
+								class="px-2 py-2 hover:bg-gray-100 transition duration-300 ease-in-out"
+							>
+								{{ subCategory.name }}
+							</div>
+						</a>
+					</div>
+				</template>
 			</VaDropdownContent>
 		</VaDropdown>
 	</div>
@@ -53,9 +59,16 @@ export default {
 			required: true,
 		},
 	},
-
 	data: () => ({
-		offset: [-35, 0],
+		offset: [0, 0],
 	}),
+	computed: {
+		hasSubCategories() {
+			return this.category.subCategories.length > 0;
+		},
+		dropdownTrigger() {
+			return this.hasSubCategories ? "hover" : "none";
+		},
+	},
 };
 </script>

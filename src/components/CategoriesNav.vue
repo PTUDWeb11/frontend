@@ -1,34 +1,75 @@
+<script setup>
+import { ChevronLeft, ChevronRight } from "lucide-vue-next";
+import { Button } from "@/components/ui/button";
+</script>
+
 <template>
-	<div class="categories-nav">
-		<h1 class="text-left font-semibold text-xl pb-4 border-b border-gray-200">
-			DANH MỤC
-		</h1>
-		<div
-			id="category-cards"
-			class="max-h-96 shadow flex flex-wrap flex-col content-start pt-px pl-px"
-		>
-			<CategoryCard
-				v-for="category in categories"
-				:key="category.id"
-				:category="category"
-			/>
+	<div class="categories-nav flex flex-col items-start">
+		<div class="flex flex-row items-center">
+			<h1 class="text-2xl font-semibold tracking-tight px-4">Categories</h1>
+
+			<div>
+				<Button variant="outline" size="icon" @click="prev">
+					<ChevronLeft class="w-4 h-4" />
+				</Button>
+				<Button variant="outline" size="icon" @click="next">
+					<ChevronRight class="w-4 h-4" />
+				</Button>
+			</div>
 		</div>
+		<Carousel class="w-full" ref="carousel" :items-to-show="5">
+			<Slide v-for="category in categories" :key="category.id">
+				<CategoryCard class="carousel__item" :category="category" />
+			</Slide>
+		</Carousel>
 	</div>
 </template>
 
 <script>
-import CategoryCard from "@/components/CategoryCard.vue";
-import Category from "@/models/category.js";
+import "vue3-carousel/dist/carousel.css";
+import { Carousel, Slide } from "vue3-carousel";
+import Category from "@/models/category";
+import CategoryCard from "./CategoryCard.vue";
+import { ref } from "vue";
+
+const carousel = ref(null);
 
 export default {
 	name: "CategoriesNav",
 	components: {
+		Carousel,
+		Slide,
+		Button,
 		CategoryCard,
+		ChevronLeft,
+		ChevronRight,
+	},
+	created() {
+		this.getDataFromApi();
 	},
 	data() {
 		return {
-			categories: Category.fetchAll(),
+			loading: false,
+			categories: [],
 		};
+	},
+	methods: {
+		next() {
+			carousel.value.next();
+		},
+		prev() {
+			carousel.value.prev();
+		},
+		getDataFromApi() {
+			this.loading = true;
+			Category.fetchAll()
+				.then((response) => {
+					this.categories = response;
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		},
 	},
 };
 </script>
