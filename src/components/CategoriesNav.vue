@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 <template>
 	<div class="categories-nav flex flex-col items-start">
 		<div class="flex flex-row items-center">
-			<h1 class="text-2xl font-semibold tracking-tight px-4">Categories</h1>
+			<h1 class="text-2xl font-semibold tracking-tight pr-4">Categories</h1>
 
 			<div>
 				<Button variant="outline" size="icon" @click="prev">
@@ -28,7 +28,6 @@ import { Button } from "@/components/ui/button";
 <script>
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide } from "vue3-carousel";
-import Category from "@/models/category";
 import CategoryCard from "./CategoryCard.vue";
 import { ref } from "vue";
 
@@ -44,14 +43,11 @@ export default {
 		ChevronLeft,
 		ChevronRight,
 	},
-	created() {
-		this.getDataFromApi();
-	},
-	data() {
-		return {
-			loading: false,
-			categories: [],
-		};
+	props: {
+		categories: {
+			type: Array,
+			required: true,
+		},
 	},
 	methods: {
 		next() {
@@ -59,16 +55,6 @@ export default {
 		},
 		prev() {
 			carousel.value.prev();
-		},
-		getDataFromApi() {
-			this.loading = true;
-			Category.fetchAll()
-				.then((response) => {
-					this.categories = response;
-				})
-				.catch((error) => {
-					console.log(error);
-				});
 		},
 	},
 };
