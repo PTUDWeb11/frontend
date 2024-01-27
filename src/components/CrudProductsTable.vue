@@ -58,6 +58,12 @@ import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { AgGridVue } from 'ag-grid-vue3';
 import { onMounted, ref } from 'vue';
 import { reactive } from 'vue';
+import { useUserStore } from '@/stores/user.js';
+import config from '@/config';
+
+
+const userStore = useUserStore();
+const token = userStore.token;
 
 export default ({
   name: "CrudProductsTable",
@@ -89,9 +95,14 @@ export default ({
     // Fetch data when the component is mounted
     onMounted(async () => {
       try {
-        const response = await fetch('https://poshop-ea528.ondigitalocean.app/products/main');
-        const data = await response.json();
-        rowData.value = data.data;
+        const responseProducts = await fetch(`${config.APIEndpoint}/admin/products?page=2`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const dataProducts = await responseProducts.json();
+
+        rowData.value = dataProducts.data;
         console.log(rowData.value);
       }
       catch (e) {
