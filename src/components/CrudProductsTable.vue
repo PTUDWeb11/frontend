@@ -58,6 +58,9 @@ import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { AgGridVue } from 'ag-grid-vue3';
 import { onMounted, ref } from 'vue';
 import { reactive } from 'vue';
+import { useUserStore } from '@/stores/user.js';
+import config from '@/config';
+
 
 export default ({
   name: "CrudProductsTable",
@@ -86,12 +89,20 @@ export default ({
       selectedRow: null,
     });
 
+    const userStore = useUserStore();
+    const token = userStore.token;
+
     // Fetch data when the component is mounted
     onMounted(async () => {
       try {
-        const response = await fetch('https://poshop-ea528.ondigitalocean.app/products/main');
-        const data = await response.json();
-        rowData.value = data.data;
+        const responseProducts = await fetch(`${config.APIEndpoint}/admin/products?page=2`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const dataProducts = await responseProducts.json();
+
+        rowData.value = dataProducts.data;
         console.log(rowData.value);
       }
       catch (e) {
@@ -145,7 +156,12 @@ export default ({
         }
         
         console.log(state.selectedRow.name);
+               
         state.showModal = false;
+
+        const response = await fetch('https://poshop-ea528.ondigitalocean.app/products/main');
+        const data = await response.json();
+        rowData.value = data.data;
       }
     };
 
@@ -213,8 +229,8 @@ export default ({
       if (gridApi.value) {
         const selectedRows = gridApi.value.getSelectedRows();
         console.log('click onSelectionChanged');
-        console.log(selectedRows[0].name);
-        state.selectedRow = selectedRows[0];
+        //console.log(selectedRows[0].name);
+        //state.selectedRow = selectedRows[0];
         //state.showModal = true;  
       }
     };
@@ -258,3 +274,4 @@ export default ({
   }
 }
 </style>
+
