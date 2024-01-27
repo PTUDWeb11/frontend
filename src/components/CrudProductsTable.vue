@@ -1,6 +1,6 @@
 <template>
   <div >
-    <VaModal v-model="state.showModal" ok-text="Apply" class="modal-crud" @ok="onApply">
+    <VaModal v-model="state.showEditModal" ok-text="Apply" class="modal-crud" @ok="onApply">
         <div v-if="state.selectedRow && state.selectedRow.images && state.selectedRow.images.length > 0" class="flex">
           <VaImage
             v-for="(image, index) in state.selectedRow.images"
@@ -17,6 +17,23 @@
     </VaModal>
 
 
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 20px">
+      <VaButtonGroup>
+        <div class="flex">
+          <VaButton icon="add" class="mr-2">
+            Add
+          </VaButton>
+          <VaButton icon="edit" class="mr-2" @click="onEditItem">
+            Edit
+          </VaButton>
+          <VaButton icon="delete" @click="onDeleteItem">
+            Delete
+          </VaButton>
+        </div>
+      </VaButtonGroup>
+    </div>
+
+
     <ag-grid-vue 
       style="height: 520px" 
       :class="themeClass" 
@@ -24,30 +41,20 @@
       @grid-ready="onGridReady" 
       :rowData="rowData" 
       :defaultColDef="defaultColDef" 
-      :pagination="true" 
+      :pagination="false" 
       :rowSelection="'multiple'"
       @cell-value-changed="onCellValueChanged" 
       @selection-changed="onSelectionChanged"
       >
     </ag-grid-vue>
 
-    <div class="flex flex-center gap-6 mb-6 mt-3 ml-2">
-      <VaButtonGroup >
-           <div class="flex ">
-              <VaButton icon="add" class="mr-2">
-                Add
-              </VaButton>
-
-              <VaButton icon="edit" class="mr-2"  @click="onEditItem" >
-                Edit
-              </VaButton> 
-
-              <VaButton icon="delete" @click="onDeleteItem">
-                Delete
-              </VaButton> 
-            </div>
-      </VaButtonGroup>
+    <div style="display: flex; justify-content: flex-end; margin-top: 20px">
+      <VaPagination 
+        v-model="state.page"
+        :pages="state.totalPages"
+      />
     </div>
+
    
   </div>
 </template>
@@ -56,7 +63,7 @@
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { AgGridVue } from 'ag-grid-vue3';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { reactive } from 'vue';
 import { useUserStore } from '@/stores/user.js';
 import config from '@/config';
@@ -75,8 +82,9 @@ export default ({
       const files = event.target.files;
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        // Do something with the file...
+       console.log(file);
       }
+      state.selectedRow.newImages = files
     }
   },
 
@@ -85,8 +93,29 @@ export default ({
     const gridApi = ref();
 
     const state = reactive({
-      showModal: false,
+      showEditModal: false,
       selectedRow: null,
+      page: 1,
+      totalPages: 1
+    });
+
+    watch(() => state.page, async (newValue, oldValue) => {
+      console.log(`Page number changed from ${oldValue} to ${newValue}`);
+      // Fetch data from the new page
+      try {
+        const responseProducts = await fetch(`${config.APIEndpoint}/admin/products?page=${newValue}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const dataProducts = await responseProducts.json();
+
+        rowData.value = dataProducts.data;
+        console.log(rowData.value);
+      }
+      catch (e) {
+        console.log('error');
+      }
     });
 
     const userStore = useUserStore();
@@ -95,7 +124,7 @@ export default ({
     // Fetch data when the component is mounted
     onMounted(async () => {
       try {
-        const responseProducts = await fetch(`${config.APIEndpoint}/admin/products?page=2`, {
+        const responseProducts = await fetch(`${config.APIEndpoint}/admin/products?page=1`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -103,6 +132,7 @@ export default ({
         const dataProducts = await responseProducts.json();
 
         rowData.value = dataProducts.data;
+        state.totalPages = dataProducts.meta._total_page;
         console.log(rowData.value);
       }
       catch (e) {
@@ -116,7 +146,7 @@ export default ({
         const selectedRows = gridApi.value.getSelectedRows();
         if (selectedRows[0]){
           state.selectedRow = selectedRows[0];
-          state.showModal = true;  
+          state.showEditModal = true;  
         }
       }
     };
@@ -124,44 +154,7 @@ export default ({
     const onApply = async () => {
       if (state.selectedRow) {
         // Update the data...
-        // API call to update the data on the server.
-        // await fetch(`https://api.com/items/${state.selectedRow.id}`, {
-        //   method: 'PUT',
-        //   body: JSON.stringify(state.selectedRow),
-        //   headers: {
-        //     'Content-Type': 'application/json'
-        //   }
-        // });
 
-        // Find the edited row in rowData and update it
-        const index = rowData.value.findIndex(row => row.id === state.selectedRow.id);
-        if (index !== -1) {
-          console.log('Update item index');
-          console.log(index);
-          rowData.value[index] = {
-            ...state.selectedRow,
-            price: parseFloat(state.selectedRow.price),
-            quantity: parseInt(state.selectedRow.quantity),
-            createdAt: new Date(state.selectedRow.createdAt),
-            updatedAt: new Date(state.selectedRow.updatedAt),
-            images: Array.isArray(state.selectedRow.images) ? state.selectedRow.images : [],
-          };
-
-          console.log(rowData.value[index]);
-        }
-
-        // Refresh the grid
-        if (gridApi.value) {
-          gridApi.value.refreshCells();
-        }
-        
-        console.log(state.selectedRow.name);
-               
-        state.showModal = false;
-
-        const response = await fetch('https://poshop-ea528.ondigitalocean.app/products/main');
-        const data = await response.json();
-        rowData.value = data.data;
       }
     };
 
@@ -185,7 +178,7 @@ export default ({
             gridApi.value.refreshCells();
           }
 
-          state.showModal = false;
+          //state.showModal = false;
         }
       };
 
@@ -249,6 +242,8 @@ export default ({
       themeClass: "ag-theme-quartz",
     };
   },
+
+
 });
 </script>
 
