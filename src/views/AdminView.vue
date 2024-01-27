@@ -13,14 +13,13 @@
         </template>
         <template #center>
           <VaNavbarItem class="font-bold text-lg">
-            Admin
+            LOGO
           </VaNavbarItem>
         </template>
       </VaNavbar>
     </template>
 
     <template #left>
-      <div style="height: 100%"> 
       <VaSidebar v-model="showSidebar" class="py-4"  >
         <VaSidebarItem :active="page === 1" @click="page = 1" :class="{ 'active-page': page === 1 }">
           <VaSidebarItemContent>
@@ -54,19 +53,7 @@
             </VaSidebarItemTitle>
           </VaSidebarItemContent>
         </VaSidebarItem>
-        <VaSpacer />
-        <VaSidebarItem :active="page === 5" @click="page = 5" :class="{ 'active-page': page === 5 }">
-          <VaSidebarItemContent>
-            <VaIcon name="group" />
-            <VaSidebarItemTitle>
-              Back
-            </VaSidebarItemTitle>
-          </VaSidebarItemContent>
-        </VaSidebarItem>
       </VaSidebar>
-
-      
-      </div>
     </template>
 
     <template #content>
@@ -76,7 +63,6 @@
       >
         <h3 class="va-h3">
           Page 1
-          <Dashboard></Dashboard>
         </h3>
         
       </main>
@@ -124,7 +110,6 @@
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue';
 import CrudProductsTable from '@/components/CrudProductsTable.vue';
-import Dashboard from '@/components/Dashboard.vue';
 import { VaDataTable, VaLayout, VaNavbar, VaSidebar, VaSidebarItem, VaInput } from "vuestic-ui"
 
 export default {
@@ -133,7 +118,6 @@ export default {
     HelloWorld,
     VaDataTable,
     CrudProductsTable,
-    Dashboard,
     VaLayout
 	},
   computed: {
