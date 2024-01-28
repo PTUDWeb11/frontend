@@ -193,7 +193,7 @@
 // Import your assets 
 import './assets/vendor/bootstrap/css/bootstrap.min.css';
 import './assets/vendor/bootstrap-icons/bootstrap-icons.css';
-import './assets/css/style.css';
+//import './assets/css/style.css';
 // Vendor JS Files 
 
 import ApexCharts from 'apexcharts'
@@ -304,7 +304,7 @@ export default {
 /* Import your CSS files here */
 @import './assets/vendor/bootstrap/css/bootstrap.min.css';
 @import './assets/vendor/bootstrap-icons/bootstrap-icons.css';
-@import './assets/css/style.css';
+/*@import './assets/css/style.css';*/
 /* More imports... */
 
 /* Your CSS code goes here */
