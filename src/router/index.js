@@ -53,10 +53,10 @@ const router = createRouter({
 		},
 		{
 			path: '/search', 
-			name: 'search',
+			name: 'Search',
 			component: SearchView,
 		},
-    {
+    	{
 			path: "/:category/:slug",
 			name: "product",
 			component: ProductView,
