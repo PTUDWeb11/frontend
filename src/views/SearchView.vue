@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { inject, watch , ref } from 'vue';
+import { inject, watch , ref, onMounted } from 'vue';
 import ProductCard from '@/components/ProductCard.vue';
 import Pagination from '@/components/Pagination.vue';
 import config from '@/config/index.js';
@@ -68,6 +68,12 @@ export default {
         console.error('There was an error!', error);
       });
     };
+
+    onMounted(() => {
+      if (sharedKeyword.value !== '') {
+        searchProducts(sharedKeyword.value);
+      }
+    });
 
     const onPageChange = (newPage) => {
         currentPage.value = newPage;

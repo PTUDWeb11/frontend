@@ -1,15 +1,17 @@
 <script setup>
 import { ref, inject } from 'vue';
+import { useRouter } from 'vue-router';
 
 const keyword = ref('');
 const sharedKeyword = inject('sharedKeyword');
+const router = useRouter();
 
 const emitSearch = () => {
   if (sharedKeyword) {
     sharedKeyword.value = keyword.value;
+    router.push({ name: 'Search', query: { q: sharedKeyword.value } });
   }
 };
-
 </script>
 
 <template>
