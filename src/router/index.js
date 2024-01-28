@@ -6,6 +6,7 @@ import AuthView from '../views/AuthView.vue';
 import ProfileView from '../views/ProfileView.vue';
 import AdminView from '../views/AdminView.vue';
 import { useUserStore } from '../stores/user';
+import SearchView from '../views/SearchView.vue';
 
 const router = createRouter({
 	history: createWebHistory(process.env.BASE_URL),
@@ -49,6 +50,12 @@ const router = createRouter({
 			},
 			component: AdminView,
 		},
+		{
+			path: '/search',
+			name: 'Search',
+			component: SearchView
+		  }
+		  
 	],
 });
 
