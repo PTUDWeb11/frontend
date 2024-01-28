@@ -145,7 +145,7 @@ import config from '@/config';
 
 
 export default ({
-  name: "CrudProductsTable",
+  name: "InvoicesManagement",
   components: {
     AgGridVue,
   },
@@ -191,7 +191,7 @@ export default ({
 
     const fetchData = async (page) => {
       try {
-        const responseProducts = await fetch(`${config.APIEndpoint}/admin/products?page=${page}`, {
+        const responseProducts = await fetch(`${config.APIEndpoint}/admin/invoices?page=${page}&limit=10`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -207,7 +207,7 @@ export default ({
       }
     };
 
-    const fetchCategories = async (page = 1, limit = 30) => {
+    const fetchCategories = async (page = 1, limit = 10) => {
       try {
         const response = await fetch(`${config.APIEndpoint}/admin/categories?page=${page}&limit=${limit}`, {
           headers: {
