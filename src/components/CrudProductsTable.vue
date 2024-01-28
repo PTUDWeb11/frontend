@@ -207,7 +207,7 @@ export default ({
       }
     };
 
-    const fetchCategories = async (page = 1, limit = 10) => {
+    const fetchCategories = async (page = 1, limit = 30) => {
       try {
         const response = await fetch(`${config.APIEndpoint}/admin/categories?page=${page}&limit=${limit}`, {
           headers: {

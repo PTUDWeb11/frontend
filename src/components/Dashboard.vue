@@ -124,10 +124,10 @@ export default {
             totalProducts: 0,
             totalUsers: 0,
             productsAdded: [],
-            usersRegistered: []
+            usersRegistered: [],
+            chart: null
         };
     },
-
     async mounted() {
         const userStore = useUserStore();
         const token = userStore.token;
@@ -178,50 +178,54 @@ export default {
         //    // More data...
         //];
 
-        new ApexCharts(document.querySelector("#chart"), {
-            series: [{
-                name: 'Products Added',
-                data: this.productsAdded.map(item => ({ x: item.date, y: item.count })),
-            }, {
-                name: 'Users Registered',
-                data: this.usersRegistered.map(item => ({ x: item.date, y: item.count })),
-            }],
-            chart: {
-                height: 380,
-                type: 'area',
-                toolbar: {
-                    show: true
+        if (!this.chart)  {
+            this.chart  =  new ApexCharts(document.querySelector("#chart"), {
+                series: [{
+                    name: 'Products Added',
+                    data: this.productsAdded.map(item => ({ x: item.date, y: item.count })),
+                }, {
+                    name: 'Users Registered',
+                    data: this.usersRegistered.map(item => ({ x: item.date, y: item.count })),
+                }],
+                chart: {
+                    height: 380,
+                    type: 'area',
+                    toolbar: {
+                        show: true
+                    },
                 },
-            },
-            markers: {
-                size: 5
-            },
-            colors: ['#4154f1', '#ff771d'],
-            fill: {
-                type: "gradient",
-                gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.3,
-                    opacityTo: 0.4,
-                    stops: [0, 90, 100]
+                markers: {
+                    size: 5
+                },
+                colors: ['#4154f1', '#ff771d'],
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.3,
+                        opacityTo: 0.4,
+                        stops: [0, 90, 100]
+                    }
+                },
+                dataLabels: {
+                    enabled: true
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 2
+                },
+                xaxis: {
+                    type: 'datetime',
+                },
+                tooltip: {
+                    x: {
+                        format: 'dd/MM/yy HH:mm'
+                    },
                 }
-            },
-            dataLabels: {
-                enabled: true
-            },
-            stroke: {
-                curve: 'smooth',
-                width: 2
-            },
-            xaxis: {
-                type: 'datetime',
-            },
-            tooltip: {
-                x: {
-                    format: 'dd/MM/yy HH:mm'
-                },
-            }
-        }).render();
+            });
+            this.chart.render();
+        }
+       
     }
 };
 </script>
