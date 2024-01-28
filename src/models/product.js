@@ -1,3 +1,4 @@
+import config from "@/config/index.js";
 /**
  * Represents a category.
  * @class
@@ -78,7 +79,7 @@ export default class Product {
 	}
 
 	static async fetchAll() {
-		return fetch("https://poshop-ea528.ondigitalocean.app/products/main")
+		return fetch(`${config.APIEndpoint}/products/main`)
 			.then((response) => response.json())
 			.then((data) => data.data)
 			.then((data) => {
@@ -91,7 +92,7 @@ export default class Product {
 	}
 
 	static async getProductBySlug(slug) {
-		return fetch(`https://poshop-ea528.ondigitalocean.app/products/${slug}`)
+		return fetch(`${config.APIEndpoint}/products/${slug}`)
 			.then((response) => response.json())
 
 			.then((data) => data.data)
