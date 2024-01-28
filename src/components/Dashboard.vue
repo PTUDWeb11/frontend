@@ -13,15 +13,14 @@
                     <div class="card info-card sales-card">
 
                         <div class="card-body">
-                        <h5 class="card-title">Product number <span>| Total</span></h5>
+                        <h5 class="card-title">Product number <span></span></h5>
 
                         <div class="d-flex align-items-center">
                             <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                             <i class="bi bi-cart"></i>
                             </div>
                             <div class="ps-3">
-                            <h6>{{ totalProducts }}</h6>
-                            <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">added today</span>
+                            <span class="text-muted small pt-2 ps-1">Total: </span> <span class="text-success small pt-1 fw-bold">{{ totalProducts }}</span>
                             </div>
                         </div>
                         </div>
@@ -34,16 +33,14 @@
                     <div class="card info-card revenue-card">
 
                         <div class="card-body">
-                        <h5 class="card-title">Balance <span>| Current</span></h5>
+                        <h5 class="card-title">Balance</h5>
 
                         <div class="d-flex align-items-center">
                             <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                             <i class="bi bi-currency-dollar"></i>
                             </div>
                             <div class="ps-3">
-                            <h6>$3,264</h6>
-                            <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span>
-
+                            <span class="text-muted small pt-2 ps-1">Current: </span> <span class="text-success small pt-1 fw-bold">$3,264</span>
                             </div>
                         </div>
                         </div>
@@ -57,15 +54,13 @@
                     <div class="card info-card customers-card">
 
                         <div class="card-body">
-                        <h5 class="card-title">Customers <span>| Total</span></h5>
+                        <h5 class="card-title">Customers <span></span></h5>
                         <div class="d-flex align-items-center">
                             <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                             <i class="bi bi-people"></i>
                             </div>
                             <div class="ps-3">
-                            <h6>{{ totalUsers }}</h6>
-                            <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
-
+                            <span class="text-muted small pt-2 ps-1">Total: </span> <span class="text-danger small pt-1 fw-bold"> {{ totalUsers }}</span>
                             </div>
                         </div>
 
@@ -77,7 +72,6 @@
                      <!-- Reports -->
                     <div class="col-12">
                     <div class="card overflow-auto">
-
                         <div class="filter">
                         <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -91,7 +85,7 @@
                         </ul>
                         </div>
 
-                        <div class="card-body">
+                        <div class="card-body card-chart">
                         <h5 class="card-title">Reports <span>/Today</span></h5>
 
                         <!-- Line Chart -->
@@ -233,13 +227,12 @@ export default {
 </script>
 
 <style scoped>
-/* Import your CSS files here */
+/* Import CSS files here */
 @import './assets/vendor/bootstrap/css/bootstrap.min.css';
 @import './assets/vendor/bootstrap-icons/bootstrap-icons.css';
-/*@import './assets/css/style.css';*/
+@import './assets/css/style.css';
 /* More imports... */
 
-/* Your CSS code goes here */
 #chart {
   max-width: 1000px;
   margin: 35px auto;
