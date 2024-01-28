@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 
 <template>
 	<div class="categories-nav flex flex-col items-start">
-		<div class="flex flex-row items-center">
+		<div class="flex flex-row items-center text-foreground">
 			<h1 class="text-2xl font-semibold tracking-tight pr-4">Categories</h1>
 
-			<div>
+			<div class="text-card-foreground">
 				<Button variant="outline" size="icon" @click="prev">
 					<ChevronLeft class="w-4 h-4" />
 				</Button>
@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 				</Button>
 			</div>
 		</div>
-		<Carousel class="w-full" ref="carousel" :items-to-show="5">
+		<Carousel class="w-full text-foreground" ref="carousel" :items-to-show="5">
 			<Slide v-for="category in categories" :key="category.id">
 				<CategoryCard class="carousel__item" :category="category" />
 			</Slide>

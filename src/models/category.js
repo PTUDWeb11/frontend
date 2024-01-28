@@ -29,12 +29,10 @@ export default class Category {
 			.then((response) => response.json())
 			.then((data) => data.data)
 			.then((data) => {
-				console.log(data);
 				const categories = [];
 				data.forEach((item) => {
 					categories.push(parse(item, data));
 				});
-				console.log(categories);
 				return categories;
 			});
 

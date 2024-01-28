@@ -30,6 +30,42 @@ export default class Product {
 	}
 
 	static async fetchAll() {
-		throw new Error("Not implemented");
+		return fetch("https://poshop-ea528.ondigitalocean.app/products/main")
+			.then((response) => response.json())
+			.then((data) => data.data)
+			.then((data) => {
+				const products = [];
+				data.forEach((item) => {
+					products.push(parse(item));
+				});
+				return products;
+			});
+
+		function parse(obj) {
+			return new Product(
+				obj.id,
+				obj.name,
+				obj.price,
+				obj.description,
+				obj.quantity,
+				obj.images,
+				parseCategories(obj.categories)
+			);
+		}
+
+		function parseCategories(categories) {
+			const parsedCategories = [];
+			categories.forEach((category) => {
+				parsedCategories.push(parseCategory(category));
+			});
+			return parsedCategories;
+		}
+
+		function parseCategory(category) {
+			return {
+				id: category.id,
+				name: category.name,
+			};
+		}
 	}
 }
