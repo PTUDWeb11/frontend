@@ -1,13 +1,21 @@
 <template>
-  <div class="products-container">
-    <ProductCard 
-      v-for="product in products" 
-      :key="product.id" 
-      :product="product"
-      class="product-item" 
-    />
-  </div>
+  
+    <div v-if="products.length > 0">
+    <div class="products-container">
+      <ProductCard 
+        v-for="product in products" 
+        :key="product.id" 
+        :product="product"
+        class="product-item" 
+      />
+      </div>
+    </div>
+    <div v-else class="text-center mt-4 text-gray-600">
+      No products found.
+    </div>
+  
 </template>
+
 
 
 <script>
@@ -83,18 +91,15 @@ export default {
 .products-container {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 1rem; 
-  justify-content: center; 
 }
 
 .product-item {
-  flex: 0 1 calc(25% - 1rem);
-}
-
-/* Thêm responsive cho các màn hình nhỏ hơn */
-@media (max-width: 600px) {
-  .product-item {
-    flex: 0 1 calc(50% - 1rem); 
-  }
+  width: calc(25% - 2rem); 
+  margin: 0.5rem; 
 }
 </style>
+
+
+

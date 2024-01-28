@@ -37,6 +37,7 @@ import { ChevronDown } from "lucide-vue-next";
 								v-for="subCategory in category.subCategories"
 								:key="subCategory.id"
 								class="px-2 py-2 hover:bg-gray-100 transition duration-300 ease-in-out"
+								@click="handleSubCategoryClick(subCategory)"
 							>
 								{{ subCategory.name }}
 							</div>
@@ -77,6 +78,9 @@ export default {
 	methods: {
 		handleCategoryClick(category) {
 			this.$router.push({ name: 'CategoryProducts', params: { category_id: category.slug } });
+		},
+		handleSubCategoryClick(subCategory) {
+			this.$router.push({ name: 'CategoryProducts', params: { category_id: subCategory.slug } });
 		}
 	}
 
