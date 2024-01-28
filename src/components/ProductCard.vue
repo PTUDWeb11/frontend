@@ -47,6 +47,12 @@ export default {
 			type: Object,
 			required: true,
 		},
+		default: () => ({
+        images: [],
+        name: '',
+        price: '',
+        quantity: 0,
+      }),
 	},
 };
 </script>
