@@ -13,6 +13,7 @@ provide('sharedKeyword', sharedKeyword);
 </script>
 
 <template>
+
   <div v-if="this.$route.meta.adminOnly">
     <RouterView />
   </div>
@@ -21,6 +22,7 @@ provide('sharedKeyword', sharedKeyword);
     <RouterView />
     <Toaster />
   </div>
+
 </template>
 
 <!-- Your existing style -->
