@@ -26,7 +26,7 @@ export default {
 		this.getDataFromApi();
 	},
 	props: {
-		categorySlug: {
+		productSlug: {
 			type: String,
 			required: false,
 		},
@@ -39,13 +39,13 @@ export default {
 	},
 	computed: {
 		title() {
-			if (this.categorySlug) {
+			if (this.productSlug) {
 				return "More like this";
 			}
 			return "FOR YOU";
 		},
 		gridLayout() {
-			if (this.categorySlug) {
+			if (this.productSlug) {
 				return "grid-cols-2 md:grid-cols-4 xl:grid-cols-4";
 			}
 			return "grid-cols-2 md:grid-cols-4 xl:grid-cols-5";
@@ -55,8 +55,8 @@ export default {
 		getDataFromApi() {
 			this.loading = true;
 
-			if (this.categorySlug) {
-				Product.fetchByCategory(this.categorySlug)
+			if (this.productSlug) {
+				Product.fetchRelatedProducts(this.productSlug)
 					.then((response) => {
 						this.products = response;
 						this.loading = false;

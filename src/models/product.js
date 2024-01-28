@@ -94,10 +94,8 @@ export default class Product {
 			});
 	}
 
-	static async fetchByCategory(categorySlug) {
-		var url = new URL(`${config.APIEndpoint}/products`);
-		url.searchParams.append("category", categorySlug);
-		console.log(url.toString());
+	static async fetchRelatedProducts(productSlug) {
+		var url = new URL(`${config.APIEndpoint}/products/${productSlug}/related`);
 
 		return fetch(url.toString())
 			.then((response) => response.json())

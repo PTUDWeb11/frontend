@@ -50,7 +50,7 @@ import { Button } from "@/components/ui/button";
 		</section>
 
 		<section id="section-suggestions" class="mt-10">
-			<ProductSuggestionSection :category-slug="product.mainCategory.slug" />
+			<ProductSuggestionSection :product-slug="product.slug" />
 		</section>
 	</div>
 </template>
