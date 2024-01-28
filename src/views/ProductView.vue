@@ -40,10 +40,8 @@ import { Button } from "@/components/ui/button";
 					</h2>
 					<section id="section-buttons" class="mt-10">
 						<div class="flex flex-row justify-end">
-							<Button variant="outline" class="flex-grow-0 mr-10">
-								Add to Cart
-							</Button>
-							<Button class="flex-grow-0"> BUY NOW </Button>
+							<Button variant="outline" class="mr-10"> Add to Cart </Button>
+							<Button> BUY NOW </Button>
 						</div>
 					</section>
 				</div>
