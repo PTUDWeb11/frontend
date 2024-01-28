@@ -37,12 +37,19 @@ import { useToast } from "@/components/ui/toast/use-toast";
 					>
 						Stock: {{ product.quantity }}
 					</p>
+					<p class="text-secondary text-md-end max-h-10 m-0" v-else>
+						Out of stock
+					</p>
 					<h2
 						class="text-xxl-end text-red-500 font-semibold text-left self-end max-h-[50px] m-0"
 					>
 						{{ product.price }}$
 					</h2>
-					<section id="section-buttons" class="mt-10">
+					<section
+						v-if="product.quantity > 0"
+						id="section-buttons"
+						class="mt-10"
+					>
 						<div class="flex flex-row justify-end">
 							<Button variant="outline" class="mr-10" @click="addItemToCart">
 								Add to Cart
@@ -99,6 +106,11 @@ export default {
 			const { toast } = useToast();
 			const userStore = useUserStore();
 
+			if (!userStore.isLoggedIn) {
+				this.$router.push({ name: "login" });
+				return;
+			}
+
 			userStore.addCartItem(this.product.id).then((response) => {
 				if (response.status == 200) {
 					toast({
@@ -114,6 +126,10 @@ export default {
 		},
 		handleBuyNow() {
 			const userStore = useUserStore();
+			if (!userStore.isLoggedIn) {
+				this.$router.push({ name: "login" });
+				return;
+			}
 
 			userStore.addCartItem(this.product.id).then((response) => {
 				if (response.status != 200) {
