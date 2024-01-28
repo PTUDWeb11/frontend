@@ -1,5 +1,6 @@
 <script setup>
 import { useUserStore } from "@/stores/user";
+import { useToast } from "@/components/ui/toast/use-toast";
 </script>
 
 <template>
@@ -10,7 +11,12 @@ import { useUserStore } from "@/stores/user";
 				class="flex flex-wrap space-y-5 lg:flex-nowrap lg:space-x-5 lg:space-y-0"
 			>
 				<div class="w-full lg:w-[60%] space-y-6">
-					<CartCard v-for="item in cart" :key="item.id" :cartItem="item" />
+					<CartCard
+						v-for="item in cart"
+						:key="item.id"
+						:cartItem="item"
+						@remove="handleRemove(item.id)"
+					/>
 				</div>
 				<div class="w-full lg:w-1/3 bg-white">
 					<section class="section-order-bill p-[1.25rem]">
@@ -59,6 +65,14 @@ export default {
 				.catch((err) => {
 					console.log(err);
 				});
+		},
+		handleRemove(id) {
+			this.cart = this.cart.filter((item) => item.id !== id);
+
+			const { toast } = useToast();
+			toast({
+				title: "Removed from cart successfully!",
+			});
 		},
 	},
 	computed: {

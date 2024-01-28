@@ -151,5 +151,17 @@ export const useUserStore = defineStore("user", {
 				return response;
 			});
 		},
+
+		async removeCartItem(itemId) {
+			return fetch(`${config.APIEndpoint}/user/items/${itemId}`, {
+				method: "DELETE",
+				headers: {
+					Authorization: `Bearer ${this.token}`,
+				},
+			}).then((response) => {
+				console.log(response);
+				return response;
+			});
+		},
 	},
 });
