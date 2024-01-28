@@ -75,15 +75,20 @@ export default {
 		updateQuantity() {
 			const userStore = useUserStore();
 
-			// userStore
-			//     .updateCartItem(this.cartItem.id, this.cartItem.quantity)
-			//     .then((cartItems) => {
-			//         console.log(cartItems);
-			//     })
-			//     .catch((err) => {
-			//         console.log(err);
-			//     });
+			userStore
+				.updateCartItem(this.cartItem.id, this.cartItem.quantity)
+				.then((response) => {
+					if (response.status === 200) {
+						console.log("Updated");
+					} else {
+						console.log("Update failed");
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 		},
+
 		increment() {
 			this.cartItem.quantity++;
 			this.updateQuantity();

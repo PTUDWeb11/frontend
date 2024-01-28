@@ -121,7 +121,6 @@ export const useUserStore = defineStore("user", {
 		},
 
 		async getUserCart() {
-			console.log(this.token);
 			return fetch(`${config.APIEndpoint}/user/items`, {
 				method: "GET",
 				headers: {
@@ -129,13 +128,28 @@ export const useUserStore = defineStore("user", {
 				},
 			})
 				.then((response) => {
-					console.log(response);
 					return response.json();
 				})
 				.then((obj) => obj.data)
 				.then((data) => {
 					return Cart.toCardItems(data);
 				});
+		},
+
+		async updateCartItem(itemId, quantity) {
+			return fetch(`${config.APIEndpoint}/user/items/${itemId}`, {
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${this.token}`,
+				},
+				body: JSON.stringify({
+					quantity: quantity,
+				}),
+			}).then((response) => {
+				console.log(response);
+				return response;
+			});
 		},
 	},
 });
