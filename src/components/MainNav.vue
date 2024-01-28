@@ -1,13 +1,15 @@
 <script setup>
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 </script>
 
 <template>
 	<nav
-		:class="cn('flex items-center space-x-4 lg:space-x-6', $attrs.class ?? '')">
+		:class="cn('flex items-center space-x-4 lg:space-x-6', $attrs.class ?? '')"
+	>
 		<a
-			href="/examples/dashboard"
-			class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+			href="/cart"
+			class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+		>
 			Cart
 		</a>
 	</nav>
@@ -15,6 +17,6 @@ import { cn } from '@/lib/utils';
 
 <script>
 export default {
-	name: 'MainNav',
+	name: "MainNav",
 };
 </script>
