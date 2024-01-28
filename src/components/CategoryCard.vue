@@ -13,6 +13,7 @@ import { ChevronDown } from "lucide-vue-next";
 			<template #anchor>
 				<div
 					class="card-container flex flex-row items-center justify-center h-16 p-2 w-full"
+					@click="handleCategoryClick(category)"
 				>
 					<div class="aspect-square h-full">
 						<img
@@ -73,5 +74,12 @@ export default {
 			return this.hasSubCategories ? "hover" : "none";
 		},
 	},
+	methods: {
+		handleCategoryClick(category) {
+			this.$router.push({ name: 'CategoryProducts', params: { category_id: category.id } });
+		}
+	}
+
+
 };
 </script>

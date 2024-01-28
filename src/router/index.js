@@ -8,6 +8,7 @@ import AdminView from '../views/AdminView.vue';
 import { useUserStore } from '../stores/user';
 import SearchView from '../views/SearchView.vue';
 import ProductView from '../views/ProductView.vue';
+import CategoryProductsView from '../views/CategoryProduct.vue';
 
 const router = createRouter({
 	history: createWebHistory(process.env.BASE_URL),
@@ -61,6 +62,11 @@ const router = createRouter({
 			name: "product",
 			component: ProductView,
 		},
+		{
+			path: '/categories/:category_id',
+			name: 'CategoryProducts',
+			component: CategoryProductsView
+		}		
 	],
 });
 
