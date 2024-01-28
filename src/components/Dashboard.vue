@@ -102,82 +102,6 @@
 
                     </div>
                     </div><!-- End Reports -->
-
-                    <!-- Top Selling -->
-                    <div class="col-12">
-                    <div class="card top-selling overflow-auto">
-
-                        <div class="filter">
-                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                            <li class="dropdown-header text-start">
-                            <h6>Filter</h6>
-                            </li>
-
-                            <li><a class="dropdown-item" href="#">Today</a></li>
-                            <li><a class="dropdown-item" href="#">This Month</a></li>
-                            <li><a class="dropdown-item" href="#">This Year</a></li>
-                        </ul>
-                        </div>
-
-                        <div class="card-body pb-0">
-                        <h5 class="card-title">Top Selling <span>| Today</span></h5>
-
-                        <table class="table table-borderless">
-                            <thead>
-                            <tr>
-                                <th scope="col">Preview</th>
-                                <th scope="col">Product</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Sold</th>
-                                <th scope="col">Revenue</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row"><a href="#"><img src="assets/img/product-1.jpg" alt=""></a></th>
-                                <td><a href="#" class="text-primary fw-bold">Ut inventore ipsa voluptas nulla</a></td>
-                                <td>$64</td>
-                                <td class="fw-bold">124</td>
-                                <td>$5,828</td>
-                            </tr>
-                            <tr>
-                                <th scope="row"><a href="#"><img src="assets/img/product-2.jpg" alt=""></a></th>
-                                <td><a href="#" class="text-primary fw-bold">Exercitationem similique doloremque</a></td>
-                                <td>$46</td>
-                                <td class="fw-bold">98</td>
-                                <td>$4,508</td>
-                            </tr>
-                            <tr>
-                                <th scope="row"><a href="#"><img src="assets/img/product-3.jpg" alt=""></a></th>
-                                <td><a href="#" class="text-primary fw-bold">Doloribus nisi exercitationem</a></td>
-                                <td>$59</td>
-                                <td class="fw-bold">74</td>
-                                <td>$4,366</td>
-                            </tr>
-                            <tr>
-                                <th scope="row"><a href="#"><img src="assets/img/product-4.jpg" alt=""></a></th>
-                                <td><a href="#" class="text-primary fw-bold">Officiis quaerat sint rerum error</a></td>
-                                <td>$32</td>
-                                <td class="fw-bold">63</td>
-                                <td>$2,016</td>
-                            </tr>
-                            <tr>
-                                <th scope="row"><a href="#"><img src="assets/img/product-5.jpg" alt=""></a></th>
-                                <td><a href="#" class="text-primary fw-bold">Sit unde debitis delectus repellendus</a></td>
-                                <td>$79</td>
-                                <td class="fw-bold">41</td>
-                                <td>$3,239</td>
-                            </tr>
-                            </tbody>
-                        </table>
-
-                        </div>
-
-                    </div>
-                    </div><!-- End Top Selling -->
-
-
                 </div>
                 </div><!-- End Left side columns -->
             </div>
@@ -205,6 +129,8 @@ export default {
         return {
             totalProducts: 0,
             totalUsers: 0,
+            productsAdded: [],
+            usersRegistered: []
         };
     },
 
@@ -219,6 +145,10 @@ export default {
         });
         const dataProducts = await responseProducts.json();
         this.totalProducts = dataProducts.data.total;
+        this.productsAdded = dataProducts.data.stats.map(item => ({
+            date: item.date,
+            count: parseInt(item.count, 10)
+        }));
 
         const responseUsers = await fetch(`${config.APIEndpoint}/admin/users/stats`, {
             headers: {
@@ -227,38 +157,40 @@ export default {
         });
         const dataUsers = await responseUsers.json();
         this.totalUsers = dataUsers.data.total;
-
+        this.usersRegistered = dataUsers.data.stats.map(item => ({
+            date: item.date,
+            count: parseInt(item.count, 10)
+        }));
 
 
         // Mock data
-        const productsAdded = [
-            { date: "2022-01-01T00:00:00.000Z", count: 10 },
-            { date: "2022-01-02T00:00:00.000Z", count: 15 },
-            { date: "2022-02-01T00:00:00.000Z", count: 20 },
-            { date: "2022-02-02T00:00:00.000Z", count: 45 },
-            { date: "2022-03-01T00:00:00.000Z", count: 60 },
-            { date: "2022-03-02T00:00:00.000Z", count: 155 },
-            { date: "2022-05-01T00:00:00.000Z", count: 160 },
-            { date: "2024-01-20", count: 16 },
-            // More data...
-        ];
+        //const productsAdded = [
+        //    { date: "2022-01-01T00:00:00.000Z", count: 10 },
+        //    { date: "2022-01-02T00:00:00.000Z", count: 15 },
+        //    { date: "2022-02-01T00:00:00.000Z", count: 20 },
+        //    { date: "2022-02-02T00:00:00.000Z", count: 45 },
+        //    { date: "2022-03-01T00:00:00.000Z", count: 60 },
+        //    { date: "2022-03-02T00:00:00.000Z", count: 155 },
+        //    { date: "2022-05-01T00:00:00.000Z", count: 160 },
+        //    { date: "2024-01-20", count: 16 },
+        //];
 
-        const usersRegistered = [
-            { date: "2022-01-01T00:00:00.000Z", count: 5 },
-            { date: "2022-02-02T00:00:00.000Z", count: 45 },
-            { date: "2022-03-01T00:00:00.000Z", count: 60 },
-            { date: "2022-03-02T00:00:00.000Z", count: 155 },
-            { date: "2022-04-02T00:00:00.000Z", count: 7 },
-            // More data...
-        ];
+        //const usersRegistered = [
+        //    { date: "2022-01-01T00:00:00.000Z", count: 5 },
+        //    { date: "2022-02-02T00:00:00.000Z", count: 45 },
+        //    { date: "2022-03-01T00:00:00.000Z", count: 60 },
+        //    { date: "2022-03-02T00:00:00.000Z", count: 155 },
+        //    { date: "2022-04-02T00:00:00.000Z", count: 7 },
+        //    // More data...
+        //];
 
         new ApexCharts(document.querySelector("#chart"), {
             series: [{
                 name: 'Products Added',
-                data: productsAdded.map(item => ({ x: item.date, y: item.count })),
+                data: this.productsAdded.map(item => ({ x: item.date, y: item.count })),
             }, {
                 name: 'Users Registered',
-                data: usersRegistered.map(item => ({ x: item.date, y: item.count })),
+                data: this.usersRegistered.map(item => ({ x: item.date, y: item.count })),
             }],
             chart: {
                 height: 380,
