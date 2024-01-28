@@ -84,7 +84,7 @@
           <VaButton icon="edit" class="mr-2" @click="onEditItem">
             Edit
           </VaButton>
-          <VaButton icon="delete" @click="onDeleteItem">
+          <VaButton icon="delete" @click="onDeleteItem" color="danger">
             Delete
           </VaButton>
         </div>

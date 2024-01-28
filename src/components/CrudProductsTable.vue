@@ -36,7 +36,7 @@
       </VaModal>  
 
     <VaModal v-model="state.showEditModal" ok-text="Apply" class="modal-crud" @ok="onApply">
-        <div v-if="state.selectedRow && state.selectedRow.images && state.selectedRow.images.length > 0" class="flex">
+        <div v-if="sstate.selectedRow && state.selectedRow.images && state.selectedRow.images.length > 0" class="flex">
           <div v-for="(image, index) in state.selectedRow.images" :key="index" class="relative w-full md:w-1/2 lg:w-1/3 m-2 border-dashed border-2 border-gray-500">
             <VaImage  :src="image"       fit="fill"
       class="max-h-32 col-span-1 bg-gray-300"/>
@@ -101,7 +101,7 @@
           <VaButton icon="edit" class="mr-2" @click="onEditItem">
             Edit
           </VaButton>
-          <VaButton icon="delete" @click="onDeleteItem">
+          <VaButton icon="delete" @click="onDeleteItem" color="danger">
             Delete
           </VaButton>
         </div>
