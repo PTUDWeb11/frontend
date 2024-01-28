@@ -32,17 +32,17 @@
         </VaSidebarItem>
         <VaSidebarItem :active="page === 2" @click="page = 2" :class="{ 'active-page': page === 2 }">
           <VaSidebarItemContent>
-            <VaIcon name="category" />
+            <VaIcon name="production_quantity_limits" />
             <VaSidebarItemTitle>
-              Category
+              Products
             </VaSidebarItemTitle>
           </VaSidebarItemContent>
         </VaSidebarItem>
         <VaSidebarItem :active="page === 3" @click="page = 3" :class="{ 'active-page': page === 3 }">
           <VaSidebarItemContent>
-            <VaIcon name="production_quantity_limits" />
+            <VaIcon name="category"  />
             <VaSidebarItemTitle>
-              Products
+              Category
             </VaSidebarItemTitle>
           </VaSidebarItemContent>
         </VaSidebarItem>
@@ -54,10 +54,18 @@
             </VaSidebarItemTitle>
           </VaSidebarItemContent>
         </VaSidebarItem>
-        <VaSpacer />
-        <VaSidebarItem :active="page === 5" @click="page = 5" :class="{ 'active-page': page === 5 }">
+        <VaSidebarItem :active="page === 6" @click="page = 6" :class="{ 'active-page': page === 6 }">
           <VaSidebarItemContent>
-            <VaIcon name="group" />
+            <VaIcon name="receipt_long" />
+            <VaSidebarItemTitle>
+              Invoices
+            </VaSidebarItemTitle>
+          </VaSidebarItemContent>
+        </VaSidebarItem>
+        <VaSpacer />
+        <VaSidebarItem :active="page === 5" @click="$router.push('/')" :class="{ 'active-page': page === 5 }">
+          <VaSidebarItemContent>
+            <VaIcon name="arrow_back" />
             <VaSidebarItemTitle>
               Back
             </VaSidebarItemTitle>
@@ -75,7 +83,7 @@
         class="p-4"
       >
         <h3 class="va-h3">
-          Page 1
+          Statistics
           <Dashboard></Dashboard>
         </h3>
         
@@ -86,12 +94,9 @@
         class="p-4"
       >
         <h3 class="va-h3">
-          Page 2
+          Products Management
         </h3>
-        <CategoriesManagement/>
-        <h3 class="va-h3">
-          Page 2
-        </h3>
+        <CrudProductsTable/>
       </main>
 
       <main
@@ -99,9 +104,9 @@
         class="p-4"
       >
         <h3 class="va-h3">
-          Products list
+          Categories Management
         </h3>
-        <CrudProductsTable/>
+         <CategoriesManagement/>
       </main>
 
       <main
@@ -109,10 +114,19 @@
         class="p-4"
       >
         <h3 class="va-h3">
-          Page 4
+          Users Management
         </h3>
         <UsersManagement/>
-       
+      </main>
+
+      <main
+        v-else-if="page === 6"
+        class="p-4"
+      >
+        <h3 class="va-h3">
+          Invoices Management
+        </h3>
+        <InvoicesManagement/>
       </main>
     </template>
   </VaLayout>
@@ -129,8 +143,9 @@
 import HelloWorld from '@/components/HelloWorld.vue';
 import CrudProductsTable from '@/components/CrudProductsTable.vue';
 import Dashboard from '@/components/Dashboard.vue';
-import  CategoriesManagement   from  '@/components/CategoriesManagement.vue';
+import CategoriesManagement   from  '@/components/CategoriesManagement.vue';
 import UsersManagement from '@/components/UsersManagement.vue';
+import InvoicesManagement from '@/components/InvoicesManagement.vue';
 import { VaDataTable, VaLayout, VaNavbar, VaSidebar, VaSidebarItem, VaInput } from "vuestic-ui"
 
 export default {
@@ -141,6 +156,7 @@ export default {
     CrudProductsTable,
     CategoriesManagement,
     UsersManagement,
+    InvoicesManagement,
     Dashboard,
     VaLayout
 	},
@@ -152,50 +168,8 @@ export default {
   },
 	data() {
     return {
-      items: [
-        {
-        id: 1,
-        name: "Leanne Graham",
-        username: "Bret",
-        email: "Sincere@april.biz",
-        phone: "1-770-736-8031 x56442",
-        website: "hildegard.org",
-      },
-      {
-        id: 2,
-        name: "Ervin Howell",
-        username: "Antonette",
-        email: "Shanna@melissa.tv",
-        phone: "010-692-6593 x09125",
-        website: "anastasia.net",
-      },
-      {
-        id: 3,
-        name: "Clementine Bauch",
-        username: "Samantha",
-        email: "Nathan@yesenia.net",
-        phone: "1-463-123-4447",
-        website: "ramiro.info",
-      },
-      {
-        id: 4,
-        name: "Patricia Lebsack",
-        username: "Karianne",
-        email: "Julianne.OConner@kory.org",
-        phone: "493-170-9623 x156",
-        website: "kale.biz",
-      },
-      {
-        id: 5,
-        name: "Chelsey Dietrich",
-        username: "Kamren",
-        email: "Lucio_Hettinger@annie.ca",
-        phone: "(254)954-1289",
-        website: "demarco.info",
-      },
-      ],
       breakpoints: {
-        smDown: true, // Or any other value you need
+        smDown: true,
       },
       showSidebar: false,
       page: 1,
