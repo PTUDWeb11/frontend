@@ -41,10 +41,6 @@ async function login(event) {
 			throw new Error(data.message);
 		}
 
-		// save token to store
-		console.log(userStore); // Check the userStore object structure
-		console.log(typeof userStore.login); // Should log 'function'
-
 		userStore.login(data.token);
 
 		toast({
