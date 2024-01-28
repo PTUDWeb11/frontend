@@ -36,8 +36,10 @@ import { Minus, Plus, XCircleIcon } from "lucide-vue-next";
 							<input
 								class="number-input__input"
 								min="1"
+								:max="cartItem.product.quantity"
 								inputmode="decimal"
 								type="text"
+								disabled
 								:value="cartItem.quantity"
 							/>
 
