@@ -42,6 +42,9 @@ export default class Product {
 	}
 
 	get mainCategory() {
+		if (this.categories.length === 0) {
+			return null;
+		}
 		return this.categories[0];
 	}
 
@@ -80,6 +83,23 @@ export default class Product {
 
 	static async fetchAll() {
 		return fetch(`${config.APIEndpoint}/products/main`)
+			.then((response) => response.json())
+			.then((data) => data.data)
+			.then((data) => {
+				const products = [];
+				data.forEach((item) => {
+					products.push(Product.parse(item));
+				});
+				return products;
+			});
+	}
+
+	static async fetchByCategory(categorySlug) {
+		var url = new URL(`${config.APIEndpoint}/products`);
+		url.searchParams.append("category", categorySlug);
+		console.log(url.toString());
+
+		return fetch(url.toString())
 			.then((response) => response.json())
 			.then((data) => data.data)
 			.then((data) => {
