@@ -3,22 +3,25 @@ import { ChevronDown } from "lucide-vue-next";
 </script>
 
 <template>
-	<div class="category-card">
+	<div class="category-card w-full">
 		<VaDropdown
+			class="w-full"
 			:trigger="dropdownTrigger"
 			hover-out-timeout="0"
 			:offset="offset"
 		>
 			<template #anchor>
-				<div class="card-container flex flex-row items-center h-16 p-2">
-					<div class="w-1/2">
+				<div
+					class="card-container flex flex-row items-center justify-center h-16 p-2 w-full"
+				>
+					<div class="aspect-square h-full">
 						<img
-							class="max-h-full object-contain"
+							class="max-h-full object-scaledown m-auto"
 							:src="category.image"
 							:alt="category.name"
 						/>
 					</div>
-					<h3 class="ml-2 mr-1">{{ category.name }}</h3>
+					<h3 class="m-0 p-0">{{ category.name }}</h3>
 					<template v-if="hasSubCategories">
 						<ChevronDown class="min-w-4 min-h-4 w-4 h-4" />
 					</template>
