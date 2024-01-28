@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 	<div v-if="loading == false" class="product-view p-10 lg:px-40">
 		<h1 class="text-2xl font-semibold text-left">{{ product.name }}</h1>
 		<section id="section-carousel">
-			<div class="md:mx-20 lg:mx-60">
+			<div class="md:mx-20 lg:mx-40">
 				<Carousel>
 					<Slide v-for="image in product.images" :key="image">
 						<img class="carousel__item" :src="image" :alt="product.name" />
@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 				</Carousel>
 			</div>
 		</section>
+
 		<section id="section-product-details" class="mt-10">
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 				<div class="flex flex-col justify-center">
@@ -47,12 +48,17 @@ import { Button } from "@/components/ui/button";
 				</div>
 			</div>
 		</section>
+
+		<section id="section-suggestions" class="mt-10">
+			<ProductSuggestionSection :product-slug="product.slug" />
+		</section>
 	</div>
 </template>
 
 <script>
 import Product from "@/models/product";
 import { Carousel, Navigation, Pagination, Slide } from "vue3-carousel";
+import ProductSuggestionSection from "@/components/ProductSuggestionSection.vue";
 
 export default {
 	name: "ProductView",
@@ -62,6 +68,7 @@ export default {
 		Pagination,
 		Slide,
 		Button,
+		ProductSuggestionSection,
 	},
 	data() {
 		return {
