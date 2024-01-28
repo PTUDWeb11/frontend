@@ -88,7 +88,10 @@
         <h3 class="va-h3">
           Page 2
         </h3>
-       <VaDataTable :items></VaDataTable>
+        <CategoriesManagement/>
+        <h3 class="va-h3">
+          Page 2
+        </h3>
       </main>
 
       <main
@@ -108,7 +111,7 @@
         <h3 class="va-h3">
           Page 4
         </h3>
-       <VaDataTable :items></VaDataTable>
+       
       </main>
     </template>
   </VaLayout>
@@ -125,6 +128,7 @@
 import HelloWorld from '@/components/HelloWorld.vue';
 import CrudProductsTable from '@/components/CrudProductsTable.vue';
 import Dashboard from '@/components/Dashboard.vue';
+import  CategoriesManagement   from  '@/components/CategoriesManagement.vue';
 import { VaDataTable, VaLayout, VaNavbar, VaSidebar, VaSidebarItem, VaInput } from "vuestic-ui"
 
 export default {
@@ -133,6 +137,7 @@ export default {
     HelloWorld,
     VaDataTable,
     CrudProductsTable,
+    CategoriesManagement,
     Dashboard,
     VaLayout
 	},
