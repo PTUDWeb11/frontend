@@ -76,7 +76,7 @@ export default {
 	},
 	methods: {
 		handleCategoryClick(category) {
-			this.$router.push({ name: 'CategoryProducts', params: { category_id: category.id } });
+			this.$router.push({ name: 'CategoryProducts', params: { category_id: category.slug } });
 		}
 	}
 

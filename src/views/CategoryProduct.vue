@@ -11,7 +11,8 @@
 
 
 <script>
-import { inject, watch , ref, onMounted } from 'vue';
+import { inject, watch , ref, onMounted} from 'vue';
+import { useRoute } from 'vue-router';
 import ProductCard from '@/components/ProductCard.vue';
 import Pagination from '@/components/Pagination.vue';
 import config from '@/config/index.js';
@@ -26,13 +27,13 @@ export default {
     const totalResults = ref(0);
     const currentPage = ref(1);
     const itemsPerPage = 3;
+    const route = useRoute();
 
-    function fetchProductsByCategory(category, minPrice, maxPrice) {
+    function fetchProductsByCategory(category) {
   
         const queryParams = new URLSearchParams({
             category: category,
-            min_price: minPrice,
-            max_price: maxPrice
+            
         });
 
         fetch(`${config.APIEndpoint}/products?${queryParams}`)
@@ -43,8 +44,8 @@ export default {
             return response.json();
         })
         .then(data => {
-            products.value = data;
-            console.log(data);
+            products.value = data.data;
+            console.log(data.data);
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
@@ -58,6 +59,13 @@ export default {
         currentPage.value = newPage;
         searchProducts(sharedKeyword.value);
     };
+
+    const categoryId = route.params.category_id;
+
+    onMounted(() => {
+        fetchProductsByCategory(categoryId);
+    });
+
 
     
 
