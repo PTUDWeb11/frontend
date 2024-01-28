@@ -99,6 +99,11 @@ export default {
 			const { toast } = useToast();
 			const userStore = useUserStore();
 
+			if (!userStore.isLoggedIn) {
+				this.$router.push({ name: "login" });
+				return;
+			}
+
 			userStore.addCartItem(this.product.id).then((response) => {
 				if (response.status == 200) {
 					toast({
@@ -114,6 +119,10 @@ export default {
 		},
 		handleBuyNow() {
 			const userStore = useUserStore();
+			if (!userStore.isLoggedIn) {
+				this.$router.push({ name: "login" });
+				return;
+			}
 
 			userStore.addCartItem(this.product.id).then((response) => {
 				if (response.status != 200) {
