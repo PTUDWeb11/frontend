@@ -1,5 +1,8 @@
 <script setup>
 import { Button } from "@/components/ui/button";
+import { useUserStore } from "@/stores/user";
+
+import { useToast } from "@/components/ui/toast/use-toast";
 </script>
 
 <template>
@@ -41,8 +44,10 @@ import { Button } from "@/components/ui/button";
 					</h2>
 					<section id="section-buttons" class="mt-10">
 						<div class="flex flex-row justify-end">
-							<Button variant="outline" class="mr-10"> Add to Cart </Button>
-							<Button> BUY NOW </Button>
+							<Button variant="outline" class="mr-10" @click="addItemToCart">
+								Add to Cart
+							</Button>
+							<Button @click="handleBuyNow"> BUY NOW </Button>
 						</div>
 					</section>
 				</div>
@@ -89,6 +94,37 @@ export default {
 					this.error = error;
 					this.loading = false;
 				});
+		},
+		addItemToCart() {
+			const { toast } = useToast();
+			const userStore = useUserStore();
+
+			userStore.addCartItem(this.product.id).then((response) => {
+				if (response.status == 200) {
+					toast({
+						title: "Addded to cart!",
+					});
+					return;
+				}
+				toast({
+					title: "Đã có lỗi xảy ra!",
+					variant: "destructive",
+				});
+			});
+		},
+		handleBuyNow() {
+			const userStore = useUserStore();
+
+			userStore.addCartItem(this.product.id).then((response) => {
+				if (response.status != 200) {
+					toast({
+						title: "Đã có lỗi xảy ra!",
+						variant: "destructive",
+					});
+					return;
+				}
+				this.$router.push({ name: "cart" });
+			});
 		},
 	},
 	created() {
