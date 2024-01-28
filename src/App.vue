@@ -5,7 +5,7 @@ import Toaster from '@/components/ui/toast/Toaster.vue';
 </script>
 
 <template>
-	<div v-if="this.$route.meta.adminOnly">
+	<div v-if="$route.meta.adminOnly">
 		<RouterView />
 	</div>
 	<div v-else>
