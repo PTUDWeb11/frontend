@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "../stores/user";
 import AdminView from "../views/AdminView.vue";
 import AuthView from "../views/AuthView.vue";
+import CartView from "../views/CartView.vue";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import ProductView from "../views/ProductView.vue";
@@ -49,6 +50,14 @@ const router = createRouter({
 				adminOnly: true,
 			},
 			component: AdminView,
+		},
+		{
+			path: "/cart",
+			name: "cart",
+			meta: {
+				requiresAuth: true,
+			},
+			component: CartView,
 		},
 		{
 			path: "/:category/:slug",

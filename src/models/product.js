@@ -61,7 +61,7 @@ export default class Product {
 			obj.description,
 			obj.quantity,
 			obj.images,
-			parseCategories(obj.categories)
+			obj.categories ? parseCategories(obj.categories) : []
 		);
 
 		function parseCategories(categories) {
