@@ -2,7 +2,7 @@
 	<section id="section-product-suggestion">
 		<h1 class="text-2xl font-semibold text-left">FOR YOU</h1>
 		<div class="px-4 py-4 lg:px-9 lg:py-6">
-			<div class="grid" :class="gridLayout">
+			<div class="grid gap-4" :class="gridLayout">
 				<ProductCard
 					v-for="product in products"
 					:product="product"
