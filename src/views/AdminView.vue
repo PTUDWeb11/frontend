@@ -111,6 +111,7 @@
         <h3 class="va-h3">
           Page 4
         </h3>
+        <UsersManagement/>
        
       </main>
     </template>
@@ -129,6 +130,7 @@ import HelloWorld from '@/components/HelloWorld.vue';
 import CrudProductsTable from '@/components/CrudProductsTable.vue';
 import Dashboard from '@/components/Dashboard.vue';
 import  CategoriesManagement   from  '@/components/CategoriesManagement.vue';
+import UsersManagement from '@/components/UsersManagement.vue';
 import { VaDataTable, VaLayout, VaNavbar, VaSidebar, VaSidebarItem, VaInput } from "vuestic-ui"
 
 export default {
@@ -138,6 +140,7 @@ export default {
     VaDataTable,
     CrudProductsTable,
     CategoriesManagement,
+    UsersManagement,
     Dashboard,
     VaLayout
 	},
