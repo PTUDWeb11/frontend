@@ -1,25 +1,26 @@
 <template>
-  
-    <div v-if="products.length > 0">
-    <div class="products-container">
-      <ProductCard 
-        v-for="product in products" 
-        :key="product.id" 
-        :product="product"
-        class="product-item" 
-      />
+  <div>
+    <div v-if="totalResults > 0">
+      <p>Total Results: {{ totalResults }}</p>
+      <div class="products-container">
+        <div v-for="product in products" :key="product.id" class="product-item">
+          <ProductCard :product="product" />
+        </div>
       </div>
+      <!-- Sử dụng component Pagination và truyền props tương ứng -->
+      <Pagination
+        :totalItems="totalResults"
+        :itemsPerPage="itemsPerPage"
+        :currentPage="currentPage"
+        @page-changed="onPageChange"
+      />
     </div>
-    <div v-else class="text-center mt-4 text-gray-600">
-      No products found.
-    </div>
-  
+    <p v-else>No results found</p>
+  </div>
 </template>
 
-
-
 <script>
-import { inject, watch , ref, onMounted} from 'vue';
+import { inject, watch, ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import ProductCard from '@/components/ProductCard.vue';
 import Pagination from '@/components/Pagination.vue';
@@ -27,65 +28,62 @@ import config from '@/config/index.js';
 import Search from '@/components/Search.vue';
 
 export default {
-  name: 'SearchView',
+  name: 'CategoryProductView',
   components: { ProductCard, Pagination, Search },
   setup() {
     const sharedKeyword = inject('sharedKeyword');
     const products = ref([]);
     const totalResults = ref(0);
     const currentPage = ref(1);
-    const itemsPerPage = 3;
+    const itemsPerPage = 8;
     const route = useRoute();
 
     function fetchProductsByCategory(category) {
-  
-        const queryParams = new URLSearchParams({
-            category: category,
-            
-        });
+      const queryParams = new URLSearchParams({
+        category: category,
+        page: currentPage.value,
+        limit: itemsPerPage
+      });
 
-        fetch(`${config.APIEndpoint}/products?${queryParams}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
+      fetch(`${config.APIEndpoint}/products?${queryParams}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
         })
-        .then(data => {
-            products.value = data.data;
-            console.log(data.data);
+        .then((data) => {
+          products.value = data.data;
+          totalResults.value = data.meta._total;
+          console.log(data.data);
         })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
+        .catch((error) => {
+          console.error('There was a problem with the fetch operation:', error);
         });
     }
 
 
-    
+    const categoryId = route.params.category_id;
 
     const onPageChange = (newPage) => {
         currentPage.value = newPage;
-        searchProducts(sharedKeyword.value);
+        fetchProductsByCategory(categoryId);
     };
 
-    const categoryId = route.params.category_id;
-
     onMounted(() => {
-        fetchProductsByCategory(categoryId);
+      fetchProductsByCategory(categoryId);
     });
 
-
-    
-
     return {
-      products, 
+      products,
       totalResults,
       currentPage,
       onPageChange,
     };
-  }
+  },
 };
 </script>
+
 
 <style scoped>
 .products-container {
@@ -100,6 +98,3 @@ export default {
   margin: 0.5rem; 
 }
 </style>
-
-
-
