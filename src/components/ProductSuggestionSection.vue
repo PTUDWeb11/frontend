@@ -36,7 +36,6 @@ export default {
 			this.loading = true;
 			Product.fetchAll()
 				.then((response) => {
-					print(response);
 					this.products = response;
 				})
 				.catch((error) => {
