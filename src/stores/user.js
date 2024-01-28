@@ -163,5 +163,22 @@ export const useUserStore = defineStore("user", {
 				return response;
 			});
 		},
+
+		async addCartItem(productId) {
+			return fetch(`${config.APIEndpoint}/user/items`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${this.token}`,
+				},
+				body: JSON.stringify({
+					product_id: productId,
+					quantity: 1,
+				}),
+			}).then((response) => {
+				console.log(response);
+				return response;
+			});
+		},
 	},
 });
