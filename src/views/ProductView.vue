@@ -90,7 +90,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .carousel__item {
 	height: 300px;
 	min-height: 300px;
