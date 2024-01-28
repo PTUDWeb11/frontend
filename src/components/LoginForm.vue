@@ -41,7 +41,6 @@ async function login(event) {
 			throw new Error(data.message);
 		}
 
-		// save token to store
 		userStore.login(data.token);
 
 		toast({
