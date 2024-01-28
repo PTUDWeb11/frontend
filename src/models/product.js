@@ -25,33 +25,24 @@ export default class Product {
 		this.categories = categories;
 	}
 
+	get image() {
+		return this.images[0];
+	}
+
 	save() {
 		// TODO: save category to database
 	}
 
-	static async fetchAll() {
-		return fetch("https://poshop-ea528.ondigitalocean.app/products/main")
-			.then((response) => response.json())
-			.then((data) => data.data)
-			.then((data) => {
-				const products = [];
-				data.forEach((item) => {
-					products.push(parse(item));
-				});
-				return products;
-			});
-
-		function parse(obj) {
-			return new Product(
-				obj.id,
-				obj.name,
-				obj.price,
-				obj.description,
-				obj.quantity,
-				obj.images,
-				parseCategories(obj.categories)
-			);
-		}
+	static parse(obj) {
+		return new Product(
+			obj.id,
+			obj.name,
+			obj.price,
+			obj.description,
+			obj.quantity,
+			obj.images,
+			parseCategories(obj.categories)
+		);
 
 		function parseCategories(categories) {
 			const parsedCategories = [];
@@ -67,5 +58,29 @@ export default class Product {
 				name: category.name,
 			};
 		}
+	}
+
+	static async fetchAll() {
+		return fetch("https://poshop-ea528.ondigitalocean.app/products/main")
+			.then((response) => response.json())
+			.then((data) => data.data)
+			.then((data) => {
+				const products = [];
+				data.forEach((item) => {
+					products.push(Product.parse(item));
+				});
+				return products;
+			});
+	}
+
+	static async getProductBySlug(slug) {
+		return fetch(`https://poshop-ea528.ondigitalocean.app/products/${slug}`)
+			.then((response) => response.json())
+
+			.then((data) => data.data)
+			.then((data) => {
+				console.log(data);
+				return Product.parse(data);
+			});
 	}
 }
