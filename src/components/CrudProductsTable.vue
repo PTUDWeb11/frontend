@@ -50,6 +50,9 @@
           </div>
         </div>  
         <VaInput type="file" @change="handleFileUpload" label="Upload image" multiple/>
+        <div class="va-title text-[var(--va-primary)] mb-2" v-for="(fileName, index) in state.selectedFileNames" :key="index">
+          {{ fileName }}
+        </div>
         <VaInput v-model="state.selectedRow.name" label="Name" placeholder="Name" autofocus = true class="my-6" :rules="[(v) => !!v || 'Name is required']"/>
         <VaInput v-model="state.selectedRow.price"  label="Price"  :placeholder="state.selectedRow.price"  :rules="[(v) => !!v || 'Price is required', (v) => Number.isFinite(parseFloat(v)) || 'Price must be a valid number']"/>
         <VaInput v-model="state.selectedRow.description" label="Description" :placeholder="state.selectedRow.description" class="my-6" :rules="[(v) => !!v || 'Description is required']" />
@@ -169,6 +172,7 @@ export default ({
       addSuccess: false,
       addFailed: false,
       deleteSuccess: false,
+      selectedFileNames: [],
     });
 
     const handleFileUpload = (event) => {
@@ -178,6 +182,7 @@ export default ({
         console.log(file);
       }
       state.selectedRow.newImages = Array.from(files);
+      state.selectedFileNames = Array.from(files).map(file => file.name); 
       console.log(state.selectedRow.newImages.length);
     };
 
@@ -236,6 +241,7 @@ export default ({
         if (selectedRows[0]){
           state.selectedRow = selectedRows[0];
           selectionCategory.value = selectedRows[0].categories.map(category => category.id); // initialize selectionCategory with the category IDs of the selected product
+          state.selectedFileNames = [];
           state.showEditModal = true;  
         }
       }
@@ -419,11 +425,7 @@ export default ({
       console.log('GridReady');
     };
 
-    const onSelectionChanged = () => {
-      if (gridApi.value) {
-        
-      }
-    };
+ 
 
     return {
       state,
@@ -432,7 +434,6 @@ export default ({
       colDefs,
       defaultColDef,
       onGridReady,
-      onSelectionChanged,
       onEditItem, 
       onAddItem,
       onDeleteItem,
