@@ -6,8 +6,8 @@
 			alt="Happy New Year Banner"
 			class="w-4/6 h-64 object-cover mx-auto my-3"
 		/>
-		<PopularCategoriesSection :categories="categories" />
-		<ProductSuggestionSection />
+		<PopularCategoriesSection :categories="categories" class="mt-10" />
+		<ProductSuggestionSection class="mt-20" />
 	</div>
 </template>
 
