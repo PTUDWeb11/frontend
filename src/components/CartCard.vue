@@ -46,8 +46,11 @@ import { Minus, Plus, XCircleIcon } from "lucide-vue-next";
 							</button>
 						</div>
 
-						<button class="flex items-center flex-grow-0 ml-2">
-							Xóa
+						<button
+							class="flex items-center flex-grow-0 ml-2"
+							@click="removeItem"
+						>
+							Remove
 							<XCircleIcon class="w-4 h-4 ml-2" />
 						</button>
 					</div>
@@ -89,6 +92,25 @@ export default {
 				});
 		},
 
+		removeItem() {
+			const userStore = useUserStore();
+
+			userStore
+				.removeCartItem(this.cartItem.id)
+				.then((response) => {
+					if (response.status === 200) {
+						console.log("Removed");
+					} else {
+						console.log("Remove failed");
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+
+			this.$emit("remove");
+		},
+
 		increment() {
 			this.cartItem.quantity++;
 			this.updateQuantity();
@@ -104,6 +126,12 @@ export default {
 	},
 };
 </script>
+
+<style>
+li[role="status"] {
+	flex-grow: 0;
+}
+</style>
 
 <style scoped>
 img {
