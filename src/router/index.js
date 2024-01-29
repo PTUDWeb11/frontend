@@ -1,14 +1,13 @@
-import { createRouter, createWebHistory } from "vue-router";
-import { useUserStore } from "../stores/user";
-import AdminView from "../views/AdminView.vue";
-import AuthView from "../views/AuthView.vue";
-import CartView from "../views/CartView.vue";
-import HomeView from "../views/HomeView.vue";
-import LoginView from "../views/LoginView.vue";
-import ProductView from "../views/ProductView.vue";
-import ProfileView from "../views/ProfileView.vue";
-import RegisterView from "../views/RegisterView.vue";
-import SearchView from "../views/SearchView.vue";
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '../views/HomeView.vue';
+import LoginView from '../views/LoginView.vue';
+import RegisterView from '../views/RegisterView.vue';
+import AuthView from '../views/AuthView.vue';
+import ProfileView from '../views/ProfileView.vue';
+import AdminView from '../views/AdminView.vue';
+import SearchView from '../views/SearchView.vue';
+import ProductView from '../views/ProductView.vue';
+import CategoryProductsView from '../views/CategoryProductsView.vue'; 
 
 const router = createRouter({
 	history: createWebHistory(process.env.BASE_URL),
@@ -70,6 +69,11 @@ const router = createRouter({
 			name: "product",
 			component: ProductView,
 		},
+		{
+			path: '/categories/:category_id',
+			name: 'CategoryProducts',
+			component: CategoryProductsView
+		}		
 	],
 });
 

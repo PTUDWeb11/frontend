@@ -22,7 +22,7 @@ export default {
     },
     itemsPerPage: {
       type: Number,
-      default: 3
+      default: 8
     },
     currentPage: {
       type: Number,
@@ -67,4 +67,3 @@ export default {
   border-color: #3490dc;
 }
 </style>
-

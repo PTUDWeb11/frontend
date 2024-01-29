@@ -1,6 +1,6 @@
 <template>
 	<div class="large-category-card">
-		<a href="#" class="flex flex-col justify-center items-center px-3 py-1">
+		<a href="#" class="flex flex-col justify-center items-center px-3 py-1" @click="handleCategoryClick(category)">
 			<div class="aspect-square w-[130px] h-[130px]">
 				<div v-if="isSvg" class="svg-container h-full w-full object-scale-down">
 					<object
@@ -35,6 +35,15 @@ export default {
 			type: Object,
 			required: true,
 		},
+	},
+
+	methods: {
+		handleCategoryClick(category) {
+			this.$router.push({ name: 'CategoryProducts', params: { category_id: category.slug } });
+		},
+		handleSubCategoryClick(subCategory) {
+			this.$router.push({ name: 'CategoryProducts', params: { category_id: subCategory.slug } });
+		}
 	},
 	computed: {
 		isSvg() {

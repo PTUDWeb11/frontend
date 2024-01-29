@@ -37,7 +37,7 @@ export default {
     const products = ref([]);
     const totalResults = ref(0);
     const currentPage = ref(1);
-    const itemsPerPage = 3;
+    const itemsPerPage = 8;
 
     const searchProducts = (keyword) => {
       const apiUrl = `${config.APIEndpoint}/products/search`;
@@ -101,7 +101,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem; 
-  justify-content: center; 
+  
 }
 
 .product-item {
