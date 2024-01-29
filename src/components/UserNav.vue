@@ -32,7 +32,11 @@ function profile() {
 }
 
 function admin() {
-	router.push('/admin');
+	if (user.isAdmin) { 
+		router.push('/admin');
+	} else {
+		router.push('/');
+	}
 }
 
 </script>
