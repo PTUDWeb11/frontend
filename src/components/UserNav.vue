@@ -15,7 +15,6 @@ import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 
-
 const userStore = useUserStore();
 const user = storeToRefs(userStore).user;
 
@@ -38,7 +37,6 @@ function admin() {
 		router.push('/');
 	}
 }
-
 </script>
 
 <template>
@@ -66,19 +64,14 @@ function admin() {
 					Profile
 					<DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
 				</DropdownMenuItem>
-				<DropdownMenuItem @click="admin">
+				<DropdownMenuItem @click="admin" v-if="user.isAdmin">
 					Admin
 					<DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
 				</DropdownMenuItem>
 				<DropdownMenuItem>
-					Billing
+					Order
 					<DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
 				</DropdownMenuItem>
-				<DropdownMenuItem>
-					Settings
-					<DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-				</DropdownMenuItem>
-				<DropdownMenuItem>New Team</DropdownMenuItem>
 			</DropdownMenuGroup>
 			<DropdownMenuSeparator />
 			<DropdownMenuItem @click="logout">
