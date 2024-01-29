@@ -6,7 +6,7 @@
     <!-- Dropdown menu với các lựa chọn khoảng giá -->
     <div v-if="showPriceMenu" class="dropdown-menu">
       <label v-for="(range, index) in priceRanges" :key="index">
-        <input type="radio" :value="range.value" v-model="selectedPriceRange" @click="selectPriceRange(range.value)">
+        <input type="radio" :value="range.value || 'all'" v-model="selectedPriceRange" @click="selectPriceRange(range.value || 'all')">
         {{ range.text }}
       </label>
     </div>
@@ -53,12 +53,21 @@ export default {
     const route = useRoute();
     const showPriceMenu = ref(false);
 
-    function fetchProductsByCategory(category) {
-      const queryParams = new URLSearchParams({
+    function fetchProductsByCategory(category, priceRange) {
+      let queryParams = new URLSearchParams({
         category: category,
         page: currentPage.value,
         limit: itemsPerPage
       });
+
+      // If a price range has been selected, add the min and max price to the query params
+      if (priceRange && priceRange !== 'all') {
+        const [minPrice, maxPrice] = priceRange.split('-');
+        queryParams.append('min_price', minPrice);
+        if (maxPrice) {
+          queryParams.append('max_price', maxPrice);
+        }
+      }
 
       fetch(`${config.APIEndpoint}/products?${queryParams}`)
         .then((response) => {
@@ -71,12 +80,12 @@ export default {
           products.value = data.data;
           totalResults.value = data.meta._total;
           totalPage.value = data.meta._total_page;
-          console.log(data.data);
         })
         .catch((error) => {
           console.error('There was a problem with the fetch operation:', error);
         });
     }
+
 
 
     const categoryId = route.params.category_id;
@@ -112,6 +121,7 @@ export default {
     const selectedPriceRange = ref(null); 
     const selectPriceRange = (value) => {
       selectedPriceRange.value = value;
+      fetchProductsByCategory(categoryId, value);
     };
 
     return {
@@ -124,11 +134,11 @@ export default {
       togglePriceMenu,
       priceRanges: [
         { text: 'All', value: null },
-        { text: 'Under $50', value: '0-50' },
-        { text: '$50 - $100', value: '50-100' },
-        { text: '$100 - $150', value: '100-150' },
-        { text: '$150 - $200', value: '150-200' },
-        { text: 'Over $200', value: '200-' },
+        { text: 'Under $100', value: '0-100' },
+        { text: '$100 - $1000', value: '100-1000' },
+        { text: '$1000 - $2000', value: '1000-2000' },
+        { text: '$2000 - $3000', value: '2000-3000' },
+        { text: 'Over $3000', value: '3000-' },
       ],
 
       selectPriceRange,
