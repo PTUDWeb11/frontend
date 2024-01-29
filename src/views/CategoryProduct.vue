@@ -159,7 +159,6 @@ export default {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem; 
-  justify-content: space-evenly; 
   padding: 12px;
 }
 
