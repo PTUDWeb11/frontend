@@ -36,56 +36,39 @@
       </VaModal>  
 
     <VaModal v-model="state.showEditModal" ok-text="Apply" class="modal-crud" @ok="onApply">
-        <div v-if="state.selectedRow && state.selectedRow.images && state.selectedRow.images.length > 0" class="flex">
-          <div v-for="(image, index) in state.selectedRow.images" :key="index" class="relative w-full md:w-1/2 lg:w-1/3 m-2 border-dashed border-2 border-gray-500">
-            <VaImage  :src="image"       fit="fill"
-      class="max-h-32 col-span-1 bg-gray-300"/>
-            <VaButton
-              class="absolute top-2 right-0 m-2"
-              icon="close"
-              preset="plain"
-              color="danger"
-              @click="onDeleteImage(index)"
-            />
-          </div>
-        </div>  
-        <VaInput type="file" @change="handleFileUpload" label="Upload image" multiple/>
+        <div v-if="state.selectedRow && state.selectedRow.image" class="relative w-full md:w-1/2 lg:w-1/3 m-2 border-dashed border-2 border-gray-500">
+            <VaImage :src="state.selectedRow.image" fit="fill" class="max-h-32 col-span-1 bg-gray-300"/>
+        </div>
+        <VaInput type="file" @change="handleFileUpload" label="Change image" multiple/>
         <div class="va-title text-[var(--va-primary)] mb-2" v-for="(fileName, index) in state.selectedFileNames" :key="index">
-          {{ fileName }}
+            {{ fileName }}
         </div>
         <VaInput v-model="state.selectedRow.name" label="Name" placeholder="Name" autofocus = true class="my-6" :rules="[(v) => !!v || 'Name is required']"/>
-        <VaInput v-model="state.selectedRow.price"  label="Price"  :placeholder="state.selectedRow.price"  :rules="[(v) => !!v || 'Price is required', (v) => Number.isFinite(parseFloat(v)) || 'Price must be a valid number']"/>
-        <VaInput v-model="state.selectedRow.description" label="Description" :placeholder="state.selectedRow.description" class="my-6" :rules="[(v) => !!v || 'Description is required']" />
-       
-        <div class="va-title text-[var(--va-primary)] mb-2">
-          Categories
+
+        <div v-if="!state.isEditing" class="va-title text-[var(--va-primary)] mb-2">
+            Parent Category
         </div>
-        <div class="mb-2">
-          <VaDropdown :close-on-content-click="false" style="display: inline-block;">
-              <template #anchor>
-                <VaButton icon="edit" preset="plain"></VaButton>
-              </template>
-              <VaDropdownContent>
-                <div class="flex flex-col">
-                  <VaCheckbox
-                    v-for="category in categories"
-                    :key="category.id"
-                    v-model="selectionCategory"
-                    :array-value="category.id"
-                    :label="category.name"
-                    class="mb-6"
-                  />
-                </div>
-              </VaDropdownContent>
-          </VaDropdown>
-          {{ selectionCategory.map(id => {
-            const category = categories.find(category => category.id === id);
-            return category ? category.name : '';
-          }).join(', ') }}
-          
+        <div v-if="!state.isEditing" class="mb-2">
+            <VaDropdown :close-on-content-click="false" style="display: inline-block;">
+                <template #anchor>
+                    <VaButton icon="edit" preset="plain"></VaButton>
+                </template>
+                <VaDropdownContent>
+                    <div class="flex flex-col">
+                        <VaRadio
+                            v-for="category in categories"
+                            :key="category.id"
+                            v-model="state.selectedRow.parentId"
+                            :option="category.id"
+                            :label="category.name"
+                            name="parent-category"
+                            class="mb-6"
+                        />
+                    </div>
+                </VaDropdownContent>
+            </VaDropdown>
+            {{ categories.find(category => category.id === state.selectedRow.parentId)?.name || 'No parent category' }}
         </div>
-        
-        <VaInput v-model="state.selectedRow.quantity" label="Quantity"  :placeholder="state.selectedRow.quantity" class="my-6" :rules="[(v) => !!v || 'Quantity is required', (v) => !isNaN(parseFloat(v)) || 'Quantity must be a number']"/>
     </VaModal>
 
     <VaModal v-model="state.showDeleteConfirm" ok-text="Yes" class="modal-crud" @ok="deleteProduct">
@@ -101,7 +84,7 @@
           <VaButton icon="edit" class="mr-2" @click="onEditItem">
             Edit
           </VaButton>
-          <VaButton icon="delete" @click="onDeleteItem" color = "danger">
+          <VaButton icon="delete" @click="onDeleteItem" color="danger">
             Delete
           </VaButton>
         </div>
@@ -145,7 +128,7 @@ import config from '@/config';
 
 
 export default ({
-  name: "CrudProductsTable",
+  name: "CategoriesManagement",
   components: {
     AgGridVue,
   },
@@ -173,6 +156,7 @@ export default ({
       addFailed: false,
       deleteSuccess: false,
       selectedFileNames: [],
+      isEditing: false,
     });
 
     const handleFileUpload = (event) => {
@@ -189,33 +173,18 @@ export default ({
     const userStore = useUserStore();
     const token = userStore.token;
 
-    const fetchData = async (page) => {
-      try {
-        const responseProducts = await fetch(`${config.APIEndpoint}/admin/products?page=${page}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        const dataProducts = await responseProducts.json();
 
-        rowData.value = dataProducts.data;
-        state.totalPages = dataProducts.meta._total_page;
-        console.log(rowData.value);
-      }
-      catch (e) {
-        console.log('error');
-      }
-    };
-
-    const fetchCategories = async (page = 1, limit = 30) => {
+    const fetchData = async (page = 1, limit = 10) => {
       try {
-        const response = await fetch(`${config.APIEndpoint}/admin/categories?page=${page}&limit=${limit}`, {
+        const response = await fetch(`${config.APIEndpoint}/admin/categories?page=${page}&limit=10`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
         const data = await response.json();
+        rowData.value = data.data; 
         categories.value = data.data; 
+        state.totalPages = data.meta._total_page;
       }
       catch (e) {
         console.log('error');
@@ -225,7 +194,6 @@ export default ({
     // Fetch data when the component is mounted
     onMounted(() => {
       fetchData(state.page);
-      fetchCategories();
     }
     );
 
@@ -240,9 +208,9 @@ export default ({
         const selectedRows = gridApi.value.getSelectedRows();
         if (selectedRows[0]){
           state.selectedRow = selectedRows[0];
-          selectionCategory.value = selectedRows[0].categories.map(category => category.id); // initialize selectionCategory with the category IDs of the selected product
           state.selectedFileNames = [];
           state.showEditModal = true;  
+          state.isEditing = true;
         }
       }
     };
@@ -254,6 +222,7 @@ export default ({
 
     const onApply = async () => {
       if (state.selectedRow) {
+        let image = null;
         // If new images are uploaded, send them to the image upload API
         if (state.selectedRow.newImages) {
           const formData = new FormData();
@@ -272,35 +241,32 @@ export default ({
           if (uploadResponse.ok) {
             const uploadResult = await uploadResponse.json();
             for (const key in uploadResult) {
-              if (uploadResult.hasOwnProperty(key)) {
+                // Ensure state.selectedRow.images is initialized
+                if (!state.selectedRow.images) {
+                    state.selectedRow.images = [];
+                }
                 state.selectedRow.images.push(uploadResult[key].path);
-              }
             }
           } else {
             console.error('Image upload failed');
           }
         }
 
-        // Send the updated product data to the update product API
-        const productData = {
-          name: state.selectedRow.name,
-          description: state.selectedRow.description,
-          price: Number(state.selectedRow.price),
-          quantity: Number(state.selectedRow.quantity),
-          categories: selectionCategory.value,
-          images: state.selectedRow.images,
-        };
-
         let response;
         if (state.selectedRow.id) {
-          // If the product has an ID, update it
-          response = await fetch(`${config.APIEndpoint}/admin/products/${state.selectedRow.id}`, {
-            method: 'PUT',
+           const categoryData = {
+                name: state.selectedRow.name,
+                image: state.selectedRow.images[0],
+            };
+
+          // If the category has an ID, update it
+          response = await fetch(`${config.APIEndpoint}/admin/categories/${state.selectedRow.id}`, {
+            method: 'PATCH',
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(productData),
+            body: JSON.stringify(categoryData),
           });
 
           if (response.ok) {
@@ -312,15 +278,23 @@ export default ({
             state.updateFailed = true;
           }
         } else {
-          // If the product doesn't have an ID, create a new one
-          response = await fetch(`${config.APIEndpoint}/admin/products`, {
+            // Send the updated category data to the update category API
+            const categoryData = {
+                parent_id: state.selectedRow.parentId,
+                name: state.selectedRow.name,
+                image: state.selectedRow.images[0],
+            };
+
+          // If the category doesn't have an ID, create a new one
+          response = await fetch(`${config.APIEndpoint}/admin/categories`, {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(productData),
+            body: JSON.stringify(categoryData),
           });
+          
 
          if (response.ok) {
             state.addSuccess = true;
@@ -331,9 +305,6 @@ export default ({
             state.addFailed = true;
           }
         }
-
-
-
         state.showEditModal = false;
       }
     };
@@ -350,6 +321,7 @@ export default ({
         newImages: [],
       };
       state.showEditModal = true;
+      state.isEditing = false;
     };
 
 
@@ -393,27 +365,30 @@ export default ({
     };
 
     const colDefs = ref([
-      { field: 'name', width: 250, checkboxSelection: true, sort: 'desc', sortIndex: 0 },
-      {
-        headerName: 'Image',
-        field: 'images',
-        width: 150,
-        cellRenderer: (params) => {
-          return `<div style="display: flex; overflow: auto;">${params.value.map(src => `<img src="${src}" style="width: 40px; height: auto"/>`).join('')}</div>`;
-        }
-      },
-      { field: 'price', width: 130 },
-      { field: 'description', width: 225 },
-      { field: 'quantity', width: 130 },
-      {
-        headerName: 'Categories',
-        field: 'categories',
-        cellRenderer: (params) => {
-          return params.value.map(category => category.name).join(', ');
-        }
-      },
-      { field: 'createdAt', valueFormatter: dateFormatter },
-      { field: 'updatedAt', valueFormatter: dateFormatter },
+        { field: 'name', width: 250, checkboxSelection: true, sort: 'desc', sortIndex: 0 },
+        { field: 'createdAt', valueFormatter: dateFormatter },
+        { field: 'updatedAt', valueFormatter: dateFormatter },
+        {
+            headerName: 'Image',
+            field: 'image',
+            width: 150,
+            cellRenderer: (params) => {
+                return `<img src="${params.value}" style="width: 40px; height: auto"/>`;
+            }
+        },
+        {
+            headerName: 'Parent Name',
+            field: 'parent.name',
+            width: 150,
+        },
+        {
+            headerName: 'Parent Image',
+            field: 'parent.image',
+            width: 150,
+            cellRenderer: (params) => {
+                return `<img src="${params.value}" style="width: 40px; height: auto"/>`;
+            }
+        },
     ]);
 
     const defaultColDef = ref({
@@ -425,7 +400,6 @@ export default ({
       console.log('GridReady');
     };
 
- 
 
     return {
       state,

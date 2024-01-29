@@ -5,10 +5,9 @@ import RegisterView from '../views/RegisterView.vue';
 import AuthView from '../views/AuthView.vue';
 import ProfileView from '../views/ProfileView.vue';
 import AdminView from '../views/AdminView.vue';
-import { useUserStore } from '../stores/user';
 import SearchView from '../views/SearchView.vue';
 import ProductView from '../views/ProductView.vue';
-import CategoryProductsView from '../views/CategoryProduct.vue';
+import CategoryProductsView from '../views/CategoryProductsView.vue'; 
 
 const router = createRouter({
 	history: createWebHistory(process.env.BASE_URL),
@@ -53,11 +52,19 @@ const router = createRouter({
 			component: AdminView,
 		},
 		{
-			path: '/search', 
-			name: 'Search',
+			path: "/search",
+			name: "Search",
 			component: SearchView,
 		},
-    	{
+		{
+			path: "/cart",
+			name: "cart",
+			meta: {
+				requiresAuth: true,
+			},
+			component: CartView,
+		},
+		{
 			path: "/:category/:slug",
 			name: "product",
 			component: ProductView,

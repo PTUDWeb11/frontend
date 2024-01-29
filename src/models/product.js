@@ -61,7 +61,7 @@ export default class Product {
 			obj.description,
 			obj.quantity,
 			obj.images,
-			parseCategories(obj.categories)
+			obj.categories ? parseCategories(obj.categories) : []
 		);
 
 		function parseCategories(categories) {
@@ -81,7 +81,7 @@ export default class Product {
 		}
 	}
 
-	static async fetchAll() {
+	static async fetchAll(page = 1, perPage = 10) {
 		return fetch(`${config.APIEndpoint}/products/main`)
 			.then((response) => response.json())
 			.then((data) => data.data)
@@ -90,11 +90,19 @@ export default class Product {
 				data.forEach((item) => {
 					products.push(Product.parse(item));
 				});
-				return products;
+				// return the paginated data
+				return products.slice((page - 1) * perPage, page * perPage);
 			});
 	}
 
-	static async fetchRelatedProducts(productSlug) {
+	static async count() {
+		return fetch(`${config.APIEndpoint}/products/main`)
+			.then((response) => response.json())
+			.then((data) => data.data)
+			.then((data) => data.length);
+	}
+
+	static async fetchRelatedProducts(productSlug, page = 1, perPage = 10) {
 		var url = new URL(`${config.APIEndpoint}/products/${productSlug}/related`);
 
 		return fetch(url.toString())
@@ -105,7 +113,11 @@ export default class Product {
 				data.forEach((item) => {
 					products.push(Product.parse(item));
 				});
-				return products;
+
+				return {
+					count: products.length,
+					products: products.slice((page - 1) * perPage, page * perPage),
+				};
 			});
 	}
 
