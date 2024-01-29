@@ -1,8 +1,13 @@
 <template>
-<div class="dropdown-container">
+  <div class="dropdown-container flex items-center">
     <h3>Category: {{ categoryId }}</h3>
-    <button @click="togglePriceMenu">Chọn khoảng giá</button>
-
+    <div class="flex items-center space-x-4"> 
+      <button class="select-price-button" @click="togglePriceMenu">
+        Choose a price range <i class="material-icons">keyboard_arrow_down</i>
+      </button>
+      
+    </div>
+    <p class="text-center">Total Results: {{ totalResults }}</p>
     <!-- Dropdown menu với các lựa chọn khoảng giá -->
     <div v-if="showPriceMenu" class="dropdown-menu">
       <label v-for="(range, index) in priceRanges" :key="index">
@@ -11,26 +16,26 @@
       </label>
     </div>
   </div>
-  <div>
-    <div v-if="totalResults > 0">
-      <p>Total Results: {{ totalResults }}</p>
-      <div class="products-container">
-        <div v-for="product in products" :key="product.id" class="product-item">
-          <ProductCard :product="product" />
-        </div>
+
+  <div v-if="totalResults > 0">
+    <div class="products-container">
+      <div v-for="product in products" :key="product.id" class="product-item">
+        <ProductCard :product="product" />
       </div>
-      
-      <Pagination
+    </div>
+    
+    <Pagination
       :totalItems="totalResults"
       :itemsPerPage="itemsPerPage"
       :currentPage="currentPage"
       :totalPage="totalPage" 
       @page-changed="onPageChange"
     />
-    </div>
-    <p v-else>No results found</p>
   </div>
+  <p v-else>No results found</p>
 </template>
+
+
 
 <script>
 import { inject, watch, ref, onMounted, onUnmounted } from 'vue';
@@ -48,7 +53,7 @@ export default {
     const products = ref([]);
     const totalResults = ref(0);
     const currentPage = ref(1);
-    const itemsPerPage = 3;
+    const itemsPerPage = 8;
     const totalPage = ref(0);
     const route = useRoute();
     const showPriceMenu = ref(false);
@@ -154,7 +159,8 @@ export default {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem; 
-  justify-content: center; 
+  justify-content: space-evenly; 
+  padding: 12px;
 }
 
 .product-item {
@@ -181,13 +187,22 @@ h3{
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 100%;
-  left: 30%; 
+  top: 67%;
+  left: 12%; 
   background-color: white;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   padding: 10px;
   border-radius: 5px;
   z-index: 100; 
   width: max-content; 
+}
+
+.select-price-button {
+  @apply px-4 py-2 bg-black text-white rounded cursor-pointer flex justify-between items-center;
+  @apply float-left;
+}
+
+.material-icons {
+  @apply ml-2 text-white;
 }
 </style>
