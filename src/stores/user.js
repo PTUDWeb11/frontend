@@ -46,7 +46,7 @@ export const useUserStore = defineStore("user", {
 
 		async updateProfile(payload) {
 			const patchResponse = await fetch(
-				"https://poshop-ea528.ondigitalocean.app/user/profile",
+				`${config.APIEndpoint}/user/profile`,
 				{
 					method: "PATCH",
 					headers: {
@@ -65,7 +65,7 @@ export const useUserStore = defineStore("user", {
 			// Nếu cập nhật thành công, lấy thông tin người dùng mới
 			if (patchResult.success) {
 				const getResponse = await fetch(
-					"https://poshop-ea528.ondigitalocean.app/user/profile",
+					`${config.APIEndpoint}/user/profile`,
 					{
 						method: "GET",
 						headers: {
@@ -89,7 +89,7 @@ export const useUserStore = defineStore("user", {
 		async changePassword(payload) {
 			try {
 				const response = await fetch(
-					"https://poshop-ea528.ondigitalocean.app/user/password",
+					`${config.APIEndpoint}/user/password`,
 					{
 						method: "PATCH",
 						headers: {
