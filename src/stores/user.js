@@ -1,17 +1,17 @@
-import config from "@/config/index.js";
-import Cart from "@/models/cart.js";
-import { jwtDecode } from "jwt-decode";
-import { defineStore } from "pinia";
+import config from '@/config/index.js';
+import Cart from '@/models/cart.js';
+import { jwtDecode } from 'jwt-decode';
+import { defineStore } from 'pinia';
 
-export const useUserStore = defineStore("user", {
+export const useUserStore = defineStore('user', {
 	state: () => {
-		const token = localStorage.getItem("token");
+		const token = localStorage.getItem('token');
 		let user = null;
 		if (token) {
 			try {
 				user = jwtDecode(token);
 			} catch (error) {
-				console.error("Failed to decode token:", error);
+				console.error('Failed to decode token:', error);
 				// Handle decoding errors (e.g., clear the token or redirect to login)
 			}
 		}
@@ -23,6 +23,7 @@ export const useUserStore = defineStore("user", {
 
 	getters: {
 		isLoggedIn: (state) => !!state.user,
+		isAdmin: (state) => state.user?.isAdmin,
 	},
 	actions: {
 		login(token) {
@@ -32,7 +33,7 @@ export const useUserStore = defineStore("user", {
 
 				this.user = user;
 				this.token = token;
-				localStorage.setItem("token", token);
+				localStorage.setItem('token', token);
 			} catch (error) {
 				console.error(error);
 				throw error;
@@ -41,42 +42,36 @@ export const useUserStore = defineStore("user", {
 		logout() {
 			this.user = null;
 			this.token = null;
-			localStorage.removeItem("token");
+			localStorage.removeItem('token');
 		},
 
 		async updateProfile(payload) {
-			const patchResponse = await fetch(
-				`${config.APIEndpoint}/user/profile`,
-				{
-					method: "PATCH",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${this.token}`,
-					},
-					body: JSON.stringify(payload),
-				}
-			);
+			const patchResponse = await fetch(`${config.APIEndpoint}/user/profile`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${this.token}`,
+				},
+				body: JSON.stringify(payload),
+			});
 
 			const patchResult = await patchResponse.json();
 			if (!patchResponse.ok) {
-				throw new Error(patchResult.message || "Error updating profile");
+				throw new Error(patchResult.message || 'Error updating profile');
 			}
 
 			// Nếu cập nhật thành công, lấy thông tin người dùng mới
 			if (patchResult.success) {
-				const getResponse = await fetch(
-					`${config.APIEndpoint}/user/profile`,
-					{
-						method: "GET",
-						headers: {
-							Authorization: `Bearer ${this.token}`,
-						},
-					}
-				);
+				const getResponse = await fetch(`${config.APIEndpoint}/user/profile`, {
+					method: 'GET',
+					headers: {
+						Authorization: `Bearer ${this.token}`,
+					},
+				});
 				const updatedUserData = await getResponse.json();
 				console.log(updatedUserData);
 				if (!getResponse.ok) {
-					throw new Error("Error fetching updated user data");
+					throw new Error('Error fetching updated user data');
 				}
 
 				// Cập nhật store với thông tin người dùng mới
@@ -88,20 +83,17 @@ export const useUserStore = defineStore("user", {
 
 		async changePassword(payload) {
 			try {
-				const response = await fetch(
-					`${config.APIEndpoint}/user/password`,
-					{
-						method: "PATCH",
-						headers: {
-							"Content-Type": "application/json",
-							Authorization: `Bearer ${this.token}`,
-						},
-						body: JSON.stringify({
-							current: payload.currentPassword,
-							password: payload.newPassword,
-						}),
-					}
-				);
+				const response = await fetch(`${config.APIEndpoint}/user/password`, {
+					method: 'PATCH',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${this.token}`,
+					},
+					body: JSON.stringify({
+						current: payload.currentPassword,
+						password: payload.newPassword,
+					}),
+				});
 
 				const data = await response.json();
 				if (!response.ok) {
@@ -111,7 +103,7 @@ export const useUserStore = defineStore("user", {
 						// containing the validation issues
 						return { errors: data.errors };
 					}
-					throw new Error(data.message || "Failed to change password.");
+					throw new Error(data.message || 'Failed to change password.');
 				}
 
 				return data;
@@ -122,7 +114,7 @@ export const useUserStore = defineStore("user", {
 
 		async getUserCart() {
 			return fetch(`${config.APIEndpoint}/user/items`, {
-				method: "GET",
+				method: 'GET',
 				headers: {
 					Authorization: `Bearer ${this.token}`,
 				},
@@ -138,9 +130,9 @@ export const useUserStore = defineStore("user", {
 
 		async updateCartItem(itemId, quantity) {
 			return fetch(`${config.APIEndpoint}/user/items/${itemId}`, {
-				method: "PATCH",
+				method: 'PATCH',
 				headers: {
-					"Content-Type": "application/json",
+					'Content-Type': 'application/json',
 					Authorization: `Bearer ${this.token}`,
 				},
 				body: JSON.stringify({
@@ -154,7 +146,7 @@ export const useUserStore = defineStore("user", {
 
 		async removeCartItem(itemId) {
 			return fetch(`${config.APIEndpoint}/user/items/${itemId}`, {
-				method: "DELETE",
+				method: 'DELETE',
 				headers: {
 					Authorization: `Bearer ${this.token}`,
 				},
@@ -166,9 +158,9 @@ export const useUserStore = defineStore("user", {
 
 		async addCartItem(productId) {
 			return fetch(`${config.APIEndpoint}/user/items`, {
-				method: "POST",
+				method: 'POST',
 				headers: {
-					"Content-Type": "application/json",
+					'Content-Type': 'application/json',
 					Authorization: `Bearer ${this.token}`,
 				},
 				body: JSON.stringify({
@@ -179,6 +171,19 @@ export const useUserStore = defineStore("user", {
 				console.log(response);
 				return response;
 			});
+		},
+
+		async getUserOrders() {
+			return fetch(`${config.APIEndpoint}/user/invoices`, {
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${this.token}`,
+				},
+			})
+				.then((response) => {
+					return response.json();
+				})
+				.then((obj) => obj.data);
 		},
 	},
 });
