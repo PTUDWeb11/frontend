@@ -7,7 +7,9 @@ import ProfileView from '../views/ProfileView.vue';
 import AdminView from '../views/AdminView.vue';
 import SearchView from '../views/SearchView.vue';
 import ProductView from '../views/ProductView.vue';
-import CategoryProductsView from '../views/CategoryProductsView.vue'; 
+import CategoryProductsView from '../views/CategoryProduct.vue'; 
+import CartView from '../views/CartView.vue';
+import { useUserStore } from '../stores/user';
 
 const router = createRouter({
 	history: createWebHistory(process.env.BASE_URL),
