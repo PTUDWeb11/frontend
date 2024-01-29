@@ -37,6 +37,10 @@ function admin() {
 		router.push('/');
 	}
 }
+
+function order() {
+	router.push('/orders');
+}
 </script>
 
 <template>
@@ -68,7 +72,7 @@ function admin() {
 					Admin
 					<DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
 				</DropdownMenuItem>
-				<DropdownMenuItem>
+				<DropdownMenuItem @click="order">
 					Order
 					<DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
 				</DropdownMenuItem>

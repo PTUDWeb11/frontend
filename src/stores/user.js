@@ -172,5 +172,18 @@ export const useUserStore = defineStore('user', {
 				return response;
 			});
 		},
+
+		async getUserOrders() {
+			return fetch(`${config.APIEndpoint}/user/invoices`, {
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${this.token}`,
+				},
+			})
+				.then((response) => {
+					return response.json();
+				})
+				.then((obj) => obj.data);
+		},
 	},
 });

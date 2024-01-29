@@ -6,6 +6,7 @@ import AuthView from '../views/AuthView.vue';
 import ProfileView from '../views/ProfileView.vue';
 import AdminView from '../views/AdminView.vue';
 import SearchView from '../views/SearchView.vue';
+import OrderView from '../views/OrderView.vue';
 import ProductView from '../views/ProductView.vue';
 import CategoryProductsView from '../views/CategoryProduct.vue';
 import CartView from '../views/CartView.vue';
@@ -67,6 +68,14 @@ const router = createRouter({
 			component: CartView,
 		},
 		{
+			path: '/orders',
+			name: 'orders',
+			meta: {
+				requiresAuth: true,
+			},
+			component: OrderView,
+		},
+		{
 			path: '/:category/:slug',
 			name: 'product',
 			component: ProductView,
@@ -108,6 +117,8 @@ router.beforeEach((to, from, next) => {
 					console.log('admin');
 					next();
 				}
+			} else {
+				next();
 			}
 		}
 	} else {
