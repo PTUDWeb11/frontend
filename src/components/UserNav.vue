@@ -31,11 +31,7 @@ function profile() {
 }
 
 function admin() {
-	if (user.isAdmin) { 
-		router.push('/admin');
-	} else {
-		router.push('/');
-	}
+	router.push('/admin');
 }
 
 function order() {
