@@ -1,5 +1,16 @@
 <template>
-<h3>Category: {{ categoryId }}</h3>
+<div class="dropdown-container">
+    <h3>Category: {{ categoryId }}</h3>
+    <button @click="togglePriceMenu">Chọn khoảng giá</button>
+
+    <!-- Dropdown menu với các lựa chọn khoảng giá -->
+    <div v-if="showPriceMenu" class="dropdown-menu">
+      <label v-for="(range, index) in priceRanges" :key="index">
+        <input type="radio" :value="range.value" v-model="selectedPriceRange" @click="selectPriceRange(range.value)">
+        {{ range.text }}
+      </label>
+    </div>
+  </div>
   <div>
     <div v-if="totalResults > 0">
       <p>Total Results: {{ totalResults }}</p>
@@ -22,7 +33,7 @@
 </template>
 
 <script>
-import { inject, watch, ref, onMounted, computed } from 'vue';
+import { inject, watch, ref, onMounted, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
 import ProductCard from '@/components/ProductCard.vue';
 import Pagination from '@/components/Pagination.vue';
@@ -40,6 +51,7 @@ export default {
     const itemsPerPage = 3;
     const totalPage = ref(0);
     const route = useRoute();
+    const showPriceMenu = ref(false);
 
     function fetchProductsByCategory(category) {
       const queryParams = new URLSearchParams({
@@ -76,14 +88,51 @@ export default {
 
     onMounted(() => {
       fetchProductsByCategory(categoryId);
+      window.addEventListener('click', handleClickOutside);
     });
+
+    onUnmounted(() => {
+      window.removeEventListener('click', handleClickOutside);
+    });
+
+    const togglePriceMenu = () => {
+      showPriceMenu.value = !showPriceMenu.value;
+    };
+
+    function closePriceMenu() {
+      showPriceMenu.value = false;
+    };
+
+    function handleClickOutside(event) {
+      if (!event.target.closest('.dropdown-container')) {
+        closePriceMenu();
+      }
+    };
+
+    const selectedPriceRange = ref(null); 
+    const selectPriceRange = (value) => {
+      selectedPriceRange.value = value;
+    };
 
     return {
       products,
       totalResults,
       currentPage,
       onPageChange,
-      categoryId
+      categoryId,
+      showPriceMenu,
+      togglePriceMenu,
+      priceRanges: [
+        { text: 'All', value: null },
+        { text: 'Under $50', value: '0-50' },
+        { text: '$50 - $100', value: '50-100' },
+        { text: '$100 - $150', value: '100-150' },
+        { text: '$150 - $200', value: '150-200' },
+        { text: 'Over $200', value: '200-' },
+      ],
+
+      selectPriceRange,
+      selectedPriceRange
     };
   },
 };
@@ -111,5 +160,24 @@ export default {
 
 h3{
   text-transform: uppercase;
+}
+
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  left: 30%; 
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 100; 
+  width: max-content; 
 }
 </style>
