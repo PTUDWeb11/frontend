@@ -1,4 +1,5 @@
 <template>
+<h3>Category: {{ categoryId }}</h3>
   <div>
     <div v-if="totalResults > 0">
       <p>Total Results: {{ totalResults }}</p>
@@ -7,13 +8,14 @@
           <ProductCard :product="product" />
         </div>
       </div>
-      <!-- Sử dụng component Pagination và truyền props tương ứng -->
+      
       <Pagination
-        :totalItems="totalResults"
-        :itemsPerPage="itemsPerPage"
-        :currentPage="currentPage"
-        @page-changed="onPageChange"
-      />
+      :totalItems="totalResults"
+      :itemsPerPage="itemsPerPage"
+      :currentPage="currentPage"
+      :totalPage="totalPage" 
+      @page-changed="onPageChange"
+    />
     </div>
     <p v-else>No results found</p>
   </div>
@@ -35,7 +37,8 @@ export default {
     const products = ref([]);
     const totalResults = ref(0);
     const currentPage = ref(1);
-    const itemsPerPage = 8;
+    const itemsPerPage = 3;
+    const totalPage = ref(0);
     const route = useRoute();
 
     function fetchProductsByCategory(category) {
@@ -55,6 +58,7 @@ export default {
         .then((data) => {
           products.value = data.data;
           totalResults.value = data.meta._total;
+          totalPage.value = data.meta._total_page;
           console.log(data.data);
         })
         .catch((error) => {
@@ -79,6 +83,7 @@ export default {
       totalResults,
       currentPage,
       onPageChange,
+      categoryId
     };
   },
 };
@@ -89,12 +94,22 @@ export default {
 .products-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: 1rem; 
+  justify-content: center; 
 }
 
 .product-item {
-  width: calc(25% - 2rem); 
-  margin: 0.5rem; 
+  flex: 0 1 calc(25% - 1rem);
+}
+
+/* Thêm responsive cho các màn hình nhỏ hơn */
+@media (max-width: 600px) {
+  .product-item {
+    flex: 0 1 calc(50% - 1rem); 
+  }
+}
+
+h3{
+  text-transform: uppercase;
 }
 </style>
